@@ -1,0 +1,1 @@
+# GDMWRL-NEXTJS
