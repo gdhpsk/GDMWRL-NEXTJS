@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import next from "next";
-import dotenv from "dotenv"
-dotenv.config({path: "../.env"})
+// import dotenv from "dotenv"
+// dotenv.config({path: "../.env"})
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
