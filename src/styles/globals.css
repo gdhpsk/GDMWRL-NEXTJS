@@ -48,6 +48,12 @@ body {
     width: 70%;
 }
 
+@media screen and (max-width: 780px) {
+  .levelcard {
+    width: 100%
+  }
+}
+
 .play {
   background: #536778;
   border-radius: 5px 5px 5px 5px;
