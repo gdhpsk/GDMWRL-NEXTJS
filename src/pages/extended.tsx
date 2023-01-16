@@ -2,8 +2,9 @@ import {useState, useEffect} from "react"
 import { Container } from "react-bootstrap"
 import Level from"../components/Level"
 
-export default function Home() {
-  let [array, setArray] = useState<Array<Record<any, any>>>()
+export default function Home({data}: any) {
+
+    let [array, setArray] = useState<Array<Record<any, any>>>(data)
   useEffect(() => {
       (async () => {
         let levels = await fetch("/api/150")
@@ -11,6 +12,7 @@ export default function Home() {
         setArray(Object.values(json))
       })()
   })
+
   function botFunction() {
     document.body.scrollTop = document.body.scrollHeight;
     document.documentElement.scrollTop = document.body.scrollHeight; 
@@ -28,7 +30,7 @@ export default function Home() {
     <Container>
     <p style={{"textDecoration": "underline", "textAlign": "center"}} onClick={botFunction} className="white">To the bottom</p>
     <div>
-    {array?.map(e  => {
+    {array?.map((e: any) => {
       return (
         <div style={{"display": "grid", "placeItems": "center"}} key={e.position}>
         <Level
@@ -48,3 +50,16 @@ export default function Home() {
     </div>
   )
 }
+
+export async function getServerSideProps() {
+    // Your code
+    const res = await fetch("http://localhost:3000/api/75");
+      const data = await res.json() ;
+    
+    // Passing data to the Page using props
+    return {
+        props : {
+          data: Object.values(data)
+        }
+    }
+  }

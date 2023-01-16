@@ -1,9 +1,11 @@
+
+
 import {useState, useEffect} from "react"
 import { Container } from "react-bootstrap"
 import Level from"../components/Level"
 
-export default function Home() {
-  let [array, setArray] = useState<Array<Record<any, any>>>()
+export default function Home({data}: any) {
+  let [array, setArray] = useState<Array<Record<any, any>>>(data)
   useEffect(() => {
       (async () => {
         let levels = await fetch("/api/75")
@@ -28,7 +30,7 @@ export default function Home() {
     <Container>
     <p style={{"textDecoration": "underline", "textAlign": "center"}} onClick={botFunction} className="white">To the bottom</p>
     <div>
-    {array?.map(e  => {
+    {array?.map((e: any)  => {
       return (
         <div style={{"display": "grid", "placeItems": "center"}} key={e.position}>
         <Level
@@ -47,4 +49,16 @@ export default function Home() {
     </Container>
     </div>
   )
+}
+export async function getServerSideProps() {
+  // Your code
+  const resp = await fetch("http://localhost:3000/api/75");
+    const data = await resp.json() ;
+  
+  // Passing data to the Page using props
+  return {
+      props : {
+        data: Object.values(data)
+      }
+  }
 }
