@@ -6,7 +6,7 @@ export default function Home() {
   let [array, setArray] = useState<Array<Record<any, any>>>()
   useEffect(() => {
       (async () => {
-        let levels = await fetch("/api/75")
+        let levels = await fetch("/api/150")
         let json = await levels.json()
         setArray(Object.values(json))
       })()
@@ -21,9 +21,9 @@ export default function Home() {
   }
   return (
     <div>
-      <div className="bannerone">
-        <h1 className="page-title">Main List</h1>
-        <h1 className="page-subtitle">(Top 1 - Top 75)</h1>
+      <div className="bannertwo">
+        <h1 className="page-title">Extended List</h1>
+        <h1 className="page-subtitle">(Top 76 - Top 150)</h1>
       </div>
     <Container>
     <p style={{"textDecoration": "underline", "textAlign": "center"}} onClick={botFunction} className="white">To the bottom</p>
