@@ -70,7 +70,7 @@ body {
   width: 4em;
   opacity: 0.8;
   top: 70%;
-  left: 49.5%;
+  left: 49.3%;
   transform: translate(-50%, -50%);
 }
 .play::after {
@@ -97,16 +97,6 @@ body {
 }
 .thumb:hover .play {
   background: red;
-}
-@media screen and (max-width:630px){
-  .play{
-    font-size: 0.4em;
-  }
-}
-@media screen and (max-width:440px){
-  .play {
-    font-size: 0.3em;
-  }
 }
 
 .page-title {
