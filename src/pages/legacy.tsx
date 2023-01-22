@@ -97,7 +97,6 @@ export async function getServerSideProps() {
     // Passing data to the Page using props
     return {
         props : {
-          active: "/legacy",
           data: Object.values(data),
           data2: Object.values(data2)
         }

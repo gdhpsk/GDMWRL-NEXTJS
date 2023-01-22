@@ -64,7 +64,6 @@ export async function getServerSideProps() {
     // Passing data to the Page using props
     return {
         props : {
-          active: "/extended",
           data: Object.values(data)
         }
     }

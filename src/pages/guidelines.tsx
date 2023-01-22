@@ -153,11 +153,3 @@ And lastly, thank you for visiting our website. Have a good day.
 </>
   )
 }
-
-export async function getServerSideProps() {
-    return {
-        props : {
-          active: "/guidelines"
-        }
-    }
-  }
