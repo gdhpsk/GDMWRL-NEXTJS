@@ -7,9 +7,13 @@ export default function Home({data}: any) {
     let [array, setArray] = useState<Array<Record<any, any>>>(data)
   useEffect(() => {
       (async () => {
-        let levels = await fetch("/api/150")
-        let json = await levels.json()
-        setArray(Object.values(json))
+        try {
+          let levels = await fetch("/api/150")
+          let json = await levels.json()
+          setArray(Object.values(json))
+        } catch(_) {
+
+        }
       })()
   })
 
@@ -39,6 +43,7 @@ export default function Home({data}: any) {
           ytcode={e.ytcode}
           creator={e.host}
           records={e.list}
+          verifier={e.verifier}
         ></Level>
         <br></br>
         </div>
@@ -53,7 +58,7 @@ export default function Home({data}: any) {
 
 export async function getServerSideProps() {
     // Your code
-    const res = await fetch("http://localhost:3000/api/75");
+    const res = await fetch("http://localhost:3000/api/150");
       const data = await res.json() ;
     
     // Passing data to the Page using props

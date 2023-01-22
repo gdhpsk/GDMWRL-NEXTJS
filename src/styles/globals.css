@@ -6,8 +6,10 @@ body {
   font-size: 20px;
   text-align: left;
   color: white;
-  margin-bottom: 20px; 
-  margin-top: 20px;
+  /* margin-bottom: 20px; 
+  margin-top: 20px; */
+  line-break: anywhere;
+  text-align: center;
 }
 
 .info-card {
@@ -67,8 +69,8 @@ body {
   transition: all 150ms ease-out;
   width: 4em;
   opacity: 0.8;
-  top: 50%;
-  left: 50%;
+  top: 70%;
+  left: 49.5%;
   transform: translate(-50%, -50%);
 }
 .play::after {
@@ -78,8 +80,8 @@ body {
   content: " ";
   font-size: 0.75em;
   height: 0;
-  margin: -1em 0 0 -0.75em;
-  top: 50%;
+  margin: -1.6em 0 0 -.8em;
+  top: 70%;
   position: absolute;
   width: 0;
 }
@@ -93,6 +95,19 @@ body {
   right: -5%;
   top: 9%;
 }
+.thumb:hover .play {
+  background: red;
+}
+@media screen and (max-width:630px){
+  .play{
+    font-size: 0.4em;
+  }
+}
+@media screen and (max-width:440px){
+  .play {
+    font-size: 0.3em;
+  }
+}
 
 .page-title {
   vertical-align: middle;
@@ -102,16 +117,19 @@ body {
   font-size: 100px;
 }
 
+
+
 #nav {
   flex-direction: row;
 }
 
-#nav .nav-link {
+.nav-link {
   padding: 11px;
+  height: 50px !important;
 }
 
-#nav .nav-link:hover {
-  color: #454545 !important;
+.nav-link:hover {
+  color: #655f5f !important;
 }
 
 .page-subtitle {
@@ -126,9 +144,18 @@ body {
   width: 100%;
   height: 450px;
   background-position: center;
-  background-size: cover;
+  background-size: contain;
 }
 
+#nav {
+  display: block;
+}
+
+#responsive-navbar-nav {
+  background-color: black;
+  z-index: 10;
+  height: auto;
+}
 .bannertwo {
   background-image: url("/extendedlistimg.png");
   width: 100%;

@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+		.banner {
+			background-image: url("/guidelinesimg.png");
+			width: device-width;
+			height: 450px;
+      background-position: center;
+       background-size: cover;
+       opacity: 0.6;
+		}
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;700&display=swap');
+      #line {
+        width: 69%;
+      }
+      #dude {
+        text-align: left;
+        font-weight: 700;
+        font-family: "Lato";
+      }
+      #lol {
+        font-family: "Lato"
+      }
+      @media screen and (min-width: 977px){ 
+.collapsible {
+        width: 900px;
+      }
+      }
+		.mom {
+			color: white;
+			position: absolute;
+			top: 145px;
+			width: 100%;
+            font-weight: bold;
+			text-align: center;
+      font-family: "Lato";
+		}
+	
+  @media screen and (max-width: 467px) {
+  .mom {
+  top: 105px;
+}
+}
+		.indent {
+			margin: 60px;
+      font-family: Arial;
+		}

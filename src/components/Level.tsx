@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import React, { useState } from 'react'
 import { Row, Col, Accordion, Button } from 'react-bootstrap'
 
@@ -6,10 +7,11 @@ interface LevelProps {
     name: string
     creator: string,
     ytcode: string,
+    verifier: string,
     records: [Record<any, any>]
 }
 
-const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records }: LevelProps) => {
+const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifier }: LevelProps) => {
     function openWindow() {
         window.open(`https://youtube.com/watch?v=${ytcode}`, "_blank")
     }
@@ -17,12 +19,17 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records }: Leve
         <Accordion className="levelcard">
             <Accordion.Item eventKey='0'>
                 <Accordion.Header>
-                    <img src={`https://i.ytimg.com/vi/${ytcode}/mqdefault.jpg`} width={"200px"} onClick={openWindow} alt="Thumbnail"></img>
-                    <div className="info-card">
-                        <p className="dude"><b><b>{n > 150 ? "" : `${n}. `}{name}</b></b></p>&nbsp;
-                        <br></br>
-                        <b><b><span style={{"color": "gray", "float": "left", "textAlign": "left"}}>{creator}</span></b></b>
-                    </div>
+                    <div style={{display: "grid", placeItems: "center", width: "inherit"}}>
+                    <div>
+                <p className="dude"><b><b>{n > 150 ? "" : `${n}. `}{name}</b></b></p>&nbsp;
+            <p style={{textAlign: "center", marginTop: "-25px"}}><b><b><span style={{"color": "gray"}}>Creators: {creator}</span></b></b></p>
+            <p style={{textAlign: "center", marginTop: "-15px"}}><b><b><span style={{"color": "gray"}}>Verifier: {verifier}</span></b></b></p>
+            </div>
+            <div className="thumb">
+                    <img src={`https://i.ytimg.com/vi/${ytcode}/mqdefault.jpg`} loading="lazy" width={200} onClick={openWindow} alt="Thumbnail" />
+                    <a className="play" href="https://www.youtube.com/watch?v=YrTauLnDVdw"></a>
+            </div>
+            </div>
                 </Accordion.Header>
                 <Accordion.Body>
                     <div id="level-records">

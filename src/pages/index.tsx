@@ -4,13 +4,18 @@ import {useState, useEffect} from "react"
 import { Container } from "react-bootstrap"
 import Level from"../components/Level"
 
+
 export default function Home({data}: any) {
   let [array, setArray] = useState<Array<Record<any, any>>>(data)
   useEffect(() => {
       (async () => {
-        let levels = await fetch("/api/75")
-        let json = await levels.json()
-        setArray(Object.values(json))
+        try {
+          let levels = await fetch("/api/75")
+          let json = await levels.json()
+          setArray(Object.values(json))
+        } catch(_) {
+
+        }
       })()
   })
   function botFunction() {
@@ -39,6 +44,7 @@ export default function Home({data}: any) {
           ytcode={e.ytcode}
           creator={e.host}
           records={e.list}
+          verifier={e.verifier}
         ></Level>
         <br></br>
         </div>

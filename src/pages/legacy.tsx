@@ -7,17 +7,25 @@ export default function Home({data, data2}: any) {
     let [array, setArray] = useState<Array<Record<any, any>>>(data)
   useEffect(() => {
       (async () => {
-        let levels = await fetch("/api/extra")
-        let json = await levels.json()
-        setArray(Object.values(json))
+        try {
+          let levels = await fetch("/api/extra")
+          let json = await levels.json()
+          setArray(Object.values(json))
+        } catch(_) {
+
+        }
       })()
   })
   let [pastRated, setPastRated] = useState<Array<Record<any, any>>>(data2)
   useEffect(() => {
       (async () => {
-        let levels = await fetch("/api/unratedextremes")
-        let json = await levels.json()
-        setPastRated(Object.values(json))
+        try {
+          let levels = await fetch("/api/unratedextremes")
+          let json = await levels.json()
+          setPastRated(Object.values(json))
+        } catch(_) {
+
+        }
       })()
   })
 
@@ -48,6 +56,7 @@ export default function Home({data, data2}: any) {
           ytcode={e.ytcode}
           creator={e.host}
           records={e.list}
+          verifier={e.verifier}
         ></Level>
         <br></br>
         </div>
@@ -65,6 +74,7 @@ export default function Home({data, data2}: any) {
           ytcode={e.ytcode}
           creator={e.host}
           records={e.list}
+          verifier={e.verifier}
         ></Level>
         <br></br>
         </div>
