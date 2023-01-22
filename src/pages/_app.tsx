@@ -28,7 +28,7 @@ App.getInitialProps  = async ({ctx}: any) => {
   let {req} = ctx
   // Passing data to the Page using props
   return {
-         active: new URL(req?.protocol + '://' + req?.get?.('host') + req?.url)?.pathname
+         active: ctx.pathname
   }
 }
 
