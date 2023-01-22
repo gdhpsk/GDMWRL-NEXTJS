@@ -26,8 +26,8 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
             <p style={{textAlign: "center", marginTop: "-15px"}}><b><b><span style={{"color": "gray"}}>Verifier: {verifier}</span></b></b></p>
             </div>
             <div className="thumb">
-                    <img src={`https://i.ytimg.com/vi/${ytcode}/mqdefault.jpg`} loading="lazy" width={200} onClick={openWindow} alt="Thumbnail" />
-                    <a className="play" href="https://www.youtube.com/watch?v=YrTauLnDVdw"></a>
+                    <Image src={`https://i.ytimg.com/vi/${ytcode}/mqdefault.jpg`} width={200} onClick={openWindow} alt="Thumbnail" />
+                    <a className="play" href="https://www.youtube.com/watch?v=YrTauLnDVdw" target="_blank" rel={"noreferrer"}></a>
             </div>
             </div>
                 </Accordion.Header>
