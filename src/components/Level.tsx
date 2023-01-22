@@ -15,7 +15,6 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
     function openWindow() {
         window.open(`https://youtube.com/watch?v=${ytcode}`, "_blank")
     }
-    console.log(ytcode.split("&t=")[0])
     return (
         <Accordion className="levelcard">
             <Accordion.Item eventKey='0'>
