@@ -1,3 +1,4 @@
+import { models } from "mongoose"
 import {useState, useEffect} from "react"
 import { Container } from "react-bootstrap"
 import Level from"../components/Level"
@@ -58,13 +59,12 @@ export default function Home({data}: any) {
 
 export async function getServerSideProps() {
     // Your code
-    const res = await fetch("/api/150");
-      const data = await res.json() ;
-    
-    // Passing data to the Page using props
-    return {
-        props : {
-          data: Object.values(data)
-        }
-    }
+    const data = await models.levels.find({position: {$lt: 151, $gt: 75}}).sort({position: 1})
+  
+  // Passing data to the Page using props
+  return {
+      props : {
+        data: JSON.parse(JSON.stringify(data))
+      }
   }
+}

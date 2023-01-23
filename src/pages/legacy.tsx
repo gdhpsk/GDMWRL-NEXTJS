@@ -1,6 +1,9 @@
+import { Request } from "express"
+import { models } from "mongoose"
 import {useState, useEffect} from "react"
 import { Container } from "react-bootstrap"
 import Level from"../components/Level"
+import levels from "../../server/unrated.json"
 
 export default function Home({data, data2}: any) {
 
@@ -87,18 +90,15 @@ export default function Home({data, data2}: any) {
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(req: Request, res: Response) {
     // Your code
-    const res = await fetch(`/api/extra`);
-      const data = await res.json() ;
-      const res2 = await fetch("/api/unratedextremes");
-      const data2 = await res2.json() ;
-    
+    let data = await models.levels.find({position: {$gt: 150}}).sort({position: 1})
+    data = JSON.parse(JSON.stringify(data))
     // Passing data to the Page using props
     return {
         props : {
-          data: Object.values(data),
-          data2: Object.values(data2)
+          data: data.filter(e => !levels.levels.includes(e.name)),
+          data2: data.filter(e => levels.levels.includes(e.name))
         }
     }
   }
