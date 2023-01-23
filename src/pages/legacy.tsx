@@ -1,4 +1,3 @@
-import { Request } from "express"
 import { models } from "mongoose"
 import {useState, useEffect} from "react"
 import { Container } from "react-bootstrap"
@@ -90,7 +89,7 @@ export default function Home({data, data2}: any) {
   )
 }
 
-export async function getServerSideProps(req: Request, res: Response) {
+export async function getServerSideProps() {
     // Your code
     let data = await models.levels.find({position: {$gt: 150}}).sort({position: 1})
     data = JSON.parse(JSON.stringify(data))
