@@ -15,6 +15,7 @@ function App({ Component, pageProps, active }: AppProps | any) {
             "Main List": '/',
             "Extended List": '/extended',
             "Extra List": '/legacy',
+            "Leaderboard": '/leaderboard',
             "Discord Server": 'https://discord.gg/9dgpqqhhc2',
           }}
           active={active}

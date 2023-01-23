@@ -18,6 +18,8 @@ export default function Document() {
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
           crossOrigin="anonymous"
         />
+        <link rel="stylesheet" href="@sweetalert2/themes/dark/dark.css" />
+<script src="sweetalert2/dist/sweetalert2.min.js"></script>
         </Head>
       <body>
         <Main />

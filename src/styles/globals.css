@@ -103,6 +103,7 @@ body {
   vertical-align: middle;
   text-align: center;
   color: white;
+  line-break: anywhere;
   padding-top: 150px;
   font-size: 100px;
 }
@@ -125,6 +126,7 @@ body {
 .page-subtitle {
   vertical-align: middle;
   text-align: center;
+  line-break: anywhere;
   color: white;
   font-size: 50px;
 }

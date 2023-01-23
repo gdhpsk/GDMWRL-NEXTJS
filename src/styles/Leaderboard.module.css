@@ -1,0 +1,28 @@
+.nationality {
+    width: 1.2em;
+    position: relative;
+    margin-bottom: 7px;
+}
+
+.entry {
+    font-size: 20px;
+    margin-bottom: 5px;
+    display: inline;
+}
+
+h2:not(.lol) {
+    padding-bottom: 10px;
+}
+
+.entry:hover {
+    color: lightseagreen;
+}
+
+.socials {
+    font-size: 14px; 
+    text-align: left;
+}
+
+.socials a {
+    color: inherit;
+}
