@@ -10,12 +10,13 @@ import Script from "next/script"
 
 
 export default function Home({leaderboard, levels, bywrs}: any) {
+    let [wrs, setByWrs] = useState<Boolean>(bywrs)
     function calcPoints({records, completions, extralist, screenshot, minus}: any) {
         let points = 0
         points += records.filter((e: any) => typeof e === "object").length
         points += completions.filter((e: any) => typeof e === "object").length*2
         points += extralist.filter((e: any) => e?.percent == 100).length
-        if(bywrs) {
+        if(wrs) {
             points -= completions.filter((e: any) => typeof e === "object").length
             points += extralist.filter((e: any) => e?.percent != 100).length
             points += screenshot.filter((e: any) => typeof e === "object").length
@@ -58,13 +59,7 @@ export default function Home({leaderboard, levels, bywrs}: any) {
     <Container>
     <p style={{"textAlign": "center"}} className="white">Click on a player&#39;s name for some additional information. It may take a second to load. NOTE: If someone has a video and a photo of a record, only the video record will be here with only a few exceptions. THIS IS NOT THE SAME POINTING SYSTEM AS VENFYS!!</p>
     <div style={{display: "grid", placeItems: "center"}}>
-    <Button type="button" onClick={() => {
-        if(!bywrs) {
-            window.location.href = "/leaderboard?bywrs=true"
-          } else {
-            window.location.href = "/leaderboard"
-          }
-    }}>View by {bywrs ? "points" : "records"}</Button>
+    <Button type="button" onClick={() => setByWrs(!wrs)}>View by {wrs ? "points" : "records"}</Button>
     <br></br>
     {lead?.map((e: any)  => {
       return (
@@ -80,7 +75,7 @@ export default function Home({leaderboard, levels, bywrs}: any) {
           points={calcPoints(e)}
           key={e._id}
           levels={array}
-          bywrs={bywrs}
+          bywrs={wrs}
         ></Leaderboard>
         <br></br>
         </>
