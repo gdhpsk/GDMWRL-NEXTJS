@@ -58,7 +58,7 @@ export default function Home({data}: any) {
 
 export async function getServerSideProps() {
     // Your code
-    const res = await fetch("http://localhost:3000/api/150");
+    const res = await fetch("/api/150");
       const data = await res.json() ;
     
     // Passing data to the Page using props
