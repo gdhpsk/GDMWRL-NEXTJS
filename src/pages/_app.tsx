@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app'
 import Head from "next/head"
 import "@/styles/globals.css"
 import Nav from '@/components/Nav'
+import "@sweetalert2/themes/dark/dark.css"
 
 function App({ Component, pageProps, active }: AppProps | any) {
   return <>

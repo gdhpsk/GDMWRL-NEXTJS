@@ -26,7 +26,7 @@ const Level: React.FC<LeaderboardProps> = ({ name, records, completions, extrali
                 return <p className='white' style={{textAlign: "center"}}>none</p>
             }
             let txt = <ul>
-            {list.map(e => <li className="white" style={{fontSize: "14px", textAlign: "left"}}>{e.name} {e.percent}% (#{levels.find((j: any) => j.list.find((x: any) => x._id.toString() == e.id.toString()))?.position}, {e.hertz}hz)</li>)}
+            {list.map(e => <li key={e.id} className="white" style={{fontSize: "14px", textAlign: "left"}}>{e.name} {e.percent}% (#{levels.find((j: any) => j.list.find((x: any) => x._id.toString() == e.id.toString()))?.position}, {e.hertz}hz)</li>)}
             </ul>
             return txt
         }
@@ -50,7 +50,7 @@ const Level: React.FC<LeaderboardProps> = ({ name, records, completions, extrali
     }
     return (
         <div style={{display: "grid", placeItems: "center"}}>
-            <p className={"white " + styles.entry} onClick={display}><b>{nationality ? <abbr title={nationality}><img className={styles.nationality} src={`/nationalities/${nationality}.svg`} /></abbr> : ""} {name} ({points} {bywrs ? "record" : "point"}{points == 1 ? "" : "s"})</b></p>
+            <p className={"white " + styles.entry} onClick={display}><b>{nationality ? <abbr title={nationality}><Image width="24" height="18" alt="flag" className={styles.nationality} src={`/nationalities/${nationality}.svg`} /></abbr> : ""} {name} ({points} {bywrs ? "record" : "point"}{points == 1 ? "" : "s"})</b></p>
         </div>
     )
 }
