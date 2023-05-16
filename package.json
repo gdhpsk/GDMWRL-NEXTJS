@@ -10,7 +10,7 @@
     "v": "next --version"
   },
   "dependencies": {
-    "@next/font": "13.1.2",
+    "@next/font": "^13.1.2",
     "@sweetalert2/themes": "^5.0.15",
     "@types/node": "18.11.18",
     "@types/react": "18.0.26",

@@ -4,11 +4,16 @@ import "@/styles/globals.css"
 import Nav from '@/components/Nav'
 import "@sweetalert2/themes/dark/dark.css"
 
+import { Lato } from '@next/font/google'
+
+const inter = Lato({ weight: ['400'], subsets: ['latin-ext'] })
+
 function App({ Component, pageProps, active }: AppProps | any) {
   return <>
   <Head>
   <title>Mobile World Records List</title>
   </Head>
+  <main className={inter.className}>
   <Nav 
           name='Mobile World Records'
           mainRoutes={{
@@ -22,6 +27,7 @@ function App({ Component, pageProps, active }: AppProps | any) {
           active={active}
         />
         <Component {...pageProps} />
+        </main>
   </>
 }
 
