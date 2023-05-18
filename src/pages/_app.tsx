@@ -8,6 +8,28 @@ import { Lato } from '@next/font/google'
 
 const inter = Lato({ weight: ['400'], subsets: ['latin-ext'] })
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAjMVk_yFoTBrIjARo9DuOi3xr_3qDC5Ss",
+  authDomain: "mwrl-7b27f.firebaseapp.com",
+  projectId: "mwrl-7b27f",
+  storageBucket: "mwrl-7b27f.appspot.com",
+  messagingSenderId: "859550591453",
+  appId: "1:859550591453:web:014b6fadcea5e733f9ee34",
+  measurementId: "G-53JQLS585T"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 function App({ Component, pageProps, active }: AppProps | any) {
   return <>
   <Head>
