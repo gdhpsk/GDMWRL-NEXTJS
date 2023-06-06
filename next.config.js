@@ -3,7 +3,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    largePageDataBytes: 256 * 100000,
+    largePageDataBytes: 256 * 100000
   },
   images: {
     remotePatterns: [
