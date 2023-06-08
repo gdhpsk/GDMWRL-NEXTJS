@@ -14,6 +14,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
     let resolved = await Promise.all(data)
-    res.setHeader('Cache-Control', 's-maxage=86400');
+    res.setHeader('Cache-Control', 'public, s-maxage=86400');
      res.status(200).json(resolved);
   }
