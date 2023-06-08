@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import db from "../../../firebase"
+import db from "../../../firebase" 
 
 let count = 0
 
