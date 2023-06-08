@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../firebase" 
+import { NextResponse } from "next/server";
 
 let count = 0
 
@@ -14,6 +15,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
     let resolved = await Promise.all(data)
-    res.setHeader('Cache-Control', 'public, s-maxage=86400');
-     res.status(200).json(resolved);
+     let response = NextResponse.json(resolved, {status: 200});
+     response.headers.set("Cache-Control", 'public, s-maxage=86400')
+     return response
+  }
+
+  export const config = {
+    runtime: "experimental-edge"
   }
