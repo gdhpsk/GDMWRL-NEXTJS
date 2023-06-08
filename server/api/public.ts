@@ -7,7 +7,7 @@ import levels from "../schemas/levels"
 let count = 0
 
 app.get("/test", async (req, res) => {
-  res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+  res.header('Cache-Control', 'max-age=2592000000');
   count++;
   res.json(count)
 })
