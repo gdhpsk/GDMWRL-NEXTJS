@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "ts-node server/index.ts",
     "build": "next build",
-    "start": "next start",
+    "start": "next build && ts-node server/index.ts",
     "lint": "next lint",
     "v": "next --version"
   },
