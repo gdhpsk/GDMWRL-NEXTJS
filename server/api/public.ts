@@ -3,13 +3,17 @@ const app = express.Router()
 import leaderboard from "../schemas/leaderboard"
 import unratedextremes from "../unrated.json"
 import levels from "../schemas/levels"
+import cache from "node-cache"
+let myCache = new cache()
 
 let count = 0
 
 app.get("/test", async (req, res) => {
-  res.header('Cache-Control', 'max-age=2592000000');
-  count++;
-  res.json(count)
+  if(!myCache.get("count")) {
+    count++
+    myCache.set("count", count, 5)
+  }
+  res.json(myCache.get("count") ?? count)
 })
 
 // list of all the level names
