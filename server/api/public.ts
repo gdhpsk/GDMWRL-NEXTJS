@@ -4,6 +4,14 @@ import leaderboard from "../schemas/leaderboard"
 import unratedextremes from "../unrated.json"
 import levels from "../schemas/levels"
 
+let count = 0
+
+app.get("/test", async (req, res) => {
+  res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+  count++;
+  res.json(count)
+})
+
 // list of all the level names
 app.get("/levellist", async (req, res) => {
   const alldata = await levels.find()
