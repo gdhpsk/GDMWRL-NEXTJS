@@ -19,9 +19,9 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
     return (
         <Accordion className="levelcard">
             <Accordion.Item eventKey='0'>
-                <Accordion.Header onClick={(e) => {
+                <Accordion.Header onClick={async (e) => {
                     if(onClick) {
-                        onClick(e,n);
+                       await onClick(e,n);
                     }
                 }}>
                     <div style={{display: "grid", placeItems: "center", width: "inherit"}}>

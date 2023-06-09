@@ -26,7 +26,6 @@ export default function Home() {
 let updateFunc = async (x: any, n: any)=> {
   let e = structuredClone(array[n-1])
   if(!e.list) {
-    x.stopPropagation()
       let data = await fetch(`/api/levels/${e.id}/list`)
       if(data.ok) {
         let json = await data.json()
