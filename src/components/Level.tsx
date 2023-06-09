@@ -21,6 +21,8 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
             <Accordion.Item eventKey='0'>
                 <Accordion.Header onClick={async (e) => {
                     if(onClick) {
+                        e.preventDefault()
+                        e.stopPropagation()
                        await onClick(e,n);
                     }
                 }}>
