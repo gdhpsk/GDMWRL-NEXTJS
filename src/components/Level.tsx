@@ -8,17 +8,22 @@ interface LevelProps {
     creator: string,
     ytcode: string,
     verifier: string,
-    records: [Record<any, any>]
+    records: [Record<any, any>],
+    onClick?: Function
 }
 
-const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifier }: LevelProps) => {
+const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifier, onClick }: LevelProps) => {
     function openWindow() {
         window.open(`https://youtube.com/watch?v=${ytcode}`, "_blank")
     }
     return (
         <Accordion className="levelcard">
             <Accordion.Item eventKey='0'>
-                <Accordion.Header>
+                <Accordion.Header onClick={(e) => {
+                    if(onClick) {
+                        onClick(e,n);
+                    }
+                }}>
                     <div style={{display: "grid", placeItems: "center", width: "inherit"}}>
                     <div>
                 <p className="dude"><b><b>{n > 150 ? "" : `${n}. `}{name}</b></b></p>&nbsp;

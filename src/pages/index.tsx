@@ -3,22 +3,17 @@
 import {useState, useEffect} from "react"
 import { Container } from "react-bootstrap"
 import Level from"../components/Level"
-import {models} from "mongoose"
 
-
-export default function Home({data}: any) {
-  let [array, setArray] = useState<Array<Record<any, any>>>(data)
+export default function Home() {
+  let [array, setArray] = useState<Array<Record<any, any>>>([])
   useEffect(() => {
-      (async () => {
-        try {
-          let levels = await fetch("/api/75")
-          let json = await levels.json()
-          setArray(Object.values(json))
-        } catch(_) {
+    (async () => {
+      const data = await fetch(`/api/levels/75`)
+      let json = await data.json()
+      setArray(json)
+    })()
 
-        }
-      })()
-  })
+  }, [])
   function botFunction() {
     document.body.scrollTop = document.body.scrollHeight;
     document.documentElement.scrollTop = document.body.scrollHeight; 
@@ -27,6 +22,20 @@ export default function Home({data}: any) {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop =0; 
   }
+
+let updateFunc = async (x: any, n: any)=> {
+  let e = structuredClone(array[n-1])
+  if(!e.list) {
+    x.stopPropagation()
+      let data = await fetch(`/api/levels/${e.id}/list`)
+      if(data.ok) {
+        let json = await data.json()
+        e.list = json
+        setArray([...array.filter(i => i.id != e.id), e].sort((a,b) => a.position - b.position))
+      }
+  }
+}
+
   return (
     <div>
       <div className="bannerone">
@@ -44,8 +53,15 @@ export default function Home({data}: any) {
           name={e.name}
           ytcode={e.ytcode}
           creator={e.host}
-          records={e.list}
+          records={e.list ?? [{
+            name: "",
+            percent: ["", ""],
+            screenshot: false,
+            link: "",
+            hertz: 60
+          }]}
           verifier={e.verifier}
+          onClick={updateFunc}
         ></Level>
         <br></br>
         </div>
@@ -57,14 +73,7 @@ export default function Home({data}: any) {
     </div>
   )
 }
-export async function getServerSideProps() {
-  // Your code
-  const data = await models.levels.find({position: {$lt: 76}}).sort({position: 1})
-  
-  // Passing data to the Page using props
-  return {
-      props : {
-        data: JSON.parse(JSON.stringify(data))
-      }
-  }
+
+export const config = {
+  runtime: 'edge',
 }
