@@ -75,5 +75,5 @@ let updateFunc = async (x: any, n: any)=> {
 }
 
 export const config = {
-  runtime: 'edge',
+  runtime: 'experimental-edge',
 }
