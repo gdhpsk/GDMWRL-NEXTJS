@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import db from "../../../../firebase" 
-import { NextResponse } from "next/server";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     let everything = await db.collection("levels").where("position", "<=", 75).orderBy("position").get()
@@ -10,12 +9,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             id: e.id
         }
     })
-    let response = NextResponse.json(data, {status: 200});
-    response.headers.set("Cache-Control", 'public, s-maxage=86400')
-    return response
+    res.setHeader('Cache-Control', 'public, s-maxage=86400');
+     res.status(200).json(data);
   }
-
-  export const config = {
-    runtime: 'edge',
-  }
-  
