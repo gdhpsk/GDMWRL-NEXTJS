@@ -2,7 +2,7 @@ import * as application from "firebase-admin/app"
 import * as database from "firebase-admin/firestore"
 
 let apps = application.getApps().length
-console.log(process.env.private_key?.replace("\n", "/\n"))
+console.log(process.env.private_key?.replace("/\n", "\n"))
 const firebase = apps ? application.getApp("server") : application.initializeApp({
     credential: application.cert({
         projectId: process.env.project_id,
