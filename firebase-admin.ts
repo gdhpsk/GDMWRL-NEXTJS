@@ -1,9 +1,9 @@
 import * as application from "firebase-admin/app"
 import * as database from "firebase-admin/firestore"
 
-let exists = application.getApp("server")
+let apps = application.getApps().length
 
-const firebase = exists ?? application.initializeApp({
+const firebase = apps ? application.getApp("server") : application.initializeApp({
     credential: application.applicationDefault(),
     databaseURL: 'https://mwrl-7b27f-default-rtdb.firebaseio.com',
     databaseAuthVariableOverride: {
@@ -12,7 +12,7 @@ const firebase = exists ?? application.initializeApp({
   }, "server");
   
   let db =database.getFirestore(firebase)
-  if(!exists) {
+  if(!apps) {
   db.settings({
     ignoreUndefinedProperties: true
   })
