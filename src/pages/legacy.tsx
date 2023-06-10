@@ -80,7 +80,7 @@ export default function Home() {
           Page {page}/{pages}&nbsp;
         </Dropdown.Toggle>
         <Dropdown.Menu>
-        {Array.from(new Array(pages).keys()).map(e => <Dropdown.Item onClick={() => {
+        {Array.from(new Array(pages).keys()).map(e => <Dropdown.Item key={e} onClick={() => {
           setPage(e+1)
         }}>
             {e+1}

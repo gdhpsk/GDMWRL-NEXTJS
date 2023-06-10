@@ -73,7 +73,3 @@ let updateFunc = async (x: any, n: any)=> {
     </div>
   )
 }
-
-export const config = {
-  runtime: 'experimental-edge',
-}
