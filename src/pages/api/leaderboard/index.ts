@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import db from "../../../../firebase" 
-import { collection, getCountFromServer, getDocs, orderBy, query, where } from "firebase/firestore";
-
+import db from "../../../../firebase-admin" 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    let everything = await getDocs(collection(db, "leaderboard"))
+    let everything = await db.collection("leaderboard").get()
     let getCount = async (id: string, subcollection: string, queryOp?: string) => {
-        let count = await getCountFromServer(queryOp ? query(collection(db, `leaderboard/${id}/${subcollection}`), where("percent", queryOp as any, 100)) : collection(db, `leaderboard/${id}/${subcollection}`))
+        let count = queryOp ? await db.collection(`leaderboard/${id}/${subcollection}`).where("percent", queryOp as any, 100).count().get() : await db.collection(`leaderboard/${id}/${subcollection}`).count().get()
         return count.data().count
     }
     let data = everything.docs.map(async e => {

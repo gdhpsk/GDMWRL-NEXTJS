@@ -19,7 +19,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let app = firebase.initializeApp(firebaseConfig);
+let app = firebase.initializeApp(firebaseConfig, "client");
 
 
 // Initialize Cloud Firestore and get a reference to the service

@@ -1,10 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import db from "../../../../firebase" 
+import db from "../../../../firebase-admin" 
 import levels from "../../../../unrated.json"
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    let everything =await getDocs(query(collection(db, "levels"), where("name", "in", levels.levels), orderBy("position")))
+    let everything =await db.collection("levels").where("name", "in", levels.levels).orderBy("position").get()
     let data = everything.docs.map(e => {
         return {
             ...e.data(),
