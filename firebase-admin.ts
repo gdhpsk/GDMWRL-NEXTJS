@@ -7,7 +7,7 @@ const firebase = apps ? application.getApp("server") : application.initializeApp
         projectId: process.env.project_id,
         privateKey: process.env.private_key?.replace("\\n", "\n"),
         clientEmail: process.env.client_email
-    }),
+    }), 
     databaseURL: 'https://mwrl-7b27f-default-rtdb.firebaseio.com',
     databaseAuthVariableOverride: {
       uid: process.env.APIKEY
