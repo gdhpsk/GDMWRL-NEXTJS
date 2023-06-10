@@ -38,13 +38,11 @@ export default function Home() {
     let e = structuredClone(array.find((i:any) => i.page == page).levels.find((i: any) => i.id == n))
     if(e && !e.list) {
         let data = await fetch(`/api/levels/${e.id}/list`)
-        if(data.ok) {
           let json = await data.json()
           e.list = json
           let changedArr = structuredClone(array.find((i: any) => i.page == page))
           changedArr.levels = [...changedArr.levels.filter((i: any) => i.id != n), e].sort((a,b) => a.position - b.position)
           setArray([...array.filter((i:any) => i.page != page), changedArr])
-        }
     }
   }
 
@@ -52,11 +50,9 @@ export default function Home() {
     let e = structuredClone(pastRated.find(i => i.id == n))
     if(e && !e.list) {
         let data = await fetch(`/api/levels/${e.id}/list`)
-        if(data.ok) {
           let json = await data.json()
           e.list = json
           setPastRated([...pastRated.filter(i => i.id != e?.id), e].sort((a,b) => a.position - b.position))
-        }
     }
   }
 

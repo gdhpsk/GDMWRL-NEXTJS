@@ -9,35 +9,35 @@ import { NextApiRequest } from "next"
 import Script from "next/script"
 
 
-export default function Home({leaderboard, levels, bywrs}: any) {
-    let [wrs, setByWrs] = useState<Boolean>(bywrs)
-    function calcPoints({records, completions, extralist, screenshot, minus}: any) {
-        let points = 0
-        points += records.filter((e: any) => typeof e === "object").length
-        points += completions.filter((e: any) => typeof e === "object").length*2
-        points += extralist.filter((e: any) => e?.percent == 100).length
+export default function Home() {
+    let [wrs, setByWrs] = useState<Boolean>(false)
+    function calcPoints({count}: any) {
+        let {records, completions, extralist_comp, extralist_prog, screenshot, minus} = count
+        let points = records+completions*2+extralist_comp
         if(wrs) {
-            points -= completions.filter((e: any) => typeof e === "object").length
-            points += extralist.filter((e: any) => e?.percent != 100).length
-            points += screenshot.filter((e: any) => typeof e === "object").length
+          points -= completions
+          points += extralist_prog
+          points += screenshot
             return points
         } else {
             return points - (minus || 0)
         }
     }
-  let [array, setArray] = useState<Array<Record<any, any>>>(levels)
+  let [array, setArray] = useState<Array<Record<any, any>>>([])
   useEffect(() => {
       (async () => {
         try {
-          let levels = await fetch("/api")
+          let levels = await fetch("/api/levels/75")
           let json = await levels.json()
-          setArray(Object.values(json))
+          let levels2 = await fetch("/api/levels/150")
+          let json2 = await levels2.json()
+          setArray([...Object.values(json) as any, ...Object.values(json2)])
         } catch(_) {
 
         }
       })()
-  })
-  let [lead, setLead] = useState<Array<any>>(leaderboard)
+  }, [])
+  let [lead, setLead] = useState<Array<any>>([])
   useEffect(() => {
       (async () => {
         try {
@@ -48,8 +48,34 @@ export default function Home({leaderboard, levels, bywrs}: any) {
 
         }
       })()
-  })
-  lead.sort((a: any, b: any) => calcPoints(b) - calcPoints(a))
+  }, [])
+
+  useEffect(() => {
+    setLead([...lead].sort((a,b) => calcPoints(b) - calcPoints(a)))
+  }, [wrs])
+
+ async function updateFunc(id: string) {
+    let profile = structuredClone(lead.find(e => e.id == id))
+    if(profile && !profile.records) {
+        let getData = async (col: string) => {
+            let data = await fetch(`/api/leaderboard/${id}/${col}`)
+            let json = await data.json()
+            return json
+        }
+        let records = await getData("records")
+        let completions = await getData("completions")
+        let extralist = await getData("extralist")
+        let screenshot = await getData("screenshot")
+        profile.records = records
+        profile.completions = completions
+        profile.extralist = extralist
+        profile.screenshot = screenshot
+        setLead([...lead.filter(e => e.id != id), profile].sort((a,b) => calcPoints(b) - calcPoints(a)))
+        return profile
+    } else {
+      return profile
+    }
+  }
   return (
     <div>
     <Script src="sweetalert2/dist/sweetalert2.min.js" defer></Script>
@@ -66,16 +92,18 @@ export default function Home({leaderboard, levels, bywrs}: any) {
         <>
         <Leaderboard
           name={e.name}
-          records={e.records}
-          completions={e.completions}
-          extralist={e.extralist}
-          screenshot={e.screenshot}
+          records={e.records ?? []}
+          completions={e.completions ?? []}
+          extralist={e.extralist ?? []}
+          screenshot={e.screenshot ?? []}
           nationality={e.nationality}
           socials={e.socials}
           points={calcPoints(e)}
-          key={e._id}
+          key={e.id}
+          id={e.id}
           levels={array}
           bywrs={wrs}
+          onClick={updateFunc}
         ></Leaderboard>
         <br></br>
         </>
@@ -85,18 +113,4 @@ export default function Home({leaderboard, levels, bywrs}: any) {
     </Container>
     </div>
   )
-}
-export async function getServerSideProps(req: NextApiRequest, res: NextApiRequest) {
-  // Your code
-  let bywrs = req.query.bywrs == "true"
-  const leaderboard = await models.leaderboard.find();
-    const levels = await models.levels.find();
-  // Passing data to the Page using props
-  return {
-      props : {
-        leaderboard: JSON.parse(JSON.stringify(leaderboard)),
-        levels: JSON.parse(JSON.stringify(levels)),
-        bywrs
-      }
-  }
 }

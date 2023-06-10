@@ -17,11 +17,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return {
             ...e.data(),
             id: e.id,
+           count: {
             records,
             completions,
             extralist_prog,
             extralist_comp,
             screenshot
+           }
         }
     })
     let resolved = await Promise.all(data)
