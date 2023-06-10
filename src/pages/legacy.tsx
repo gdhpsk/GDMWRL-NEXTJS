@@ -1,36 +1,64 @@
 import { models } from "mongoose"
 import {useState, useEffect} from "react"
-import { Container } from "react-bootstrap"
+import { Container, Dropdown, DropdownButton } from "react-bootstrap"
 import Level from"../components/Level"
-import levels from "../../server/unrated.json"
 
-export default function Home({data, data2}: any) {
-
-    let [array, setArray] = useState<Array<Record<any, any>>>(data)
+export default function Home() {
+  let [pages, setPages] = useState(0)
+  let [page, setPage] = useState(1)
+    let [array, setArray] = useState<any>([])
   useEffect(() => {
       (async () => {
         try {
-          let levels = await fetch("/api/extra")
+          if(!array.find((e: any) => e.page == page)) {
+          let levels = await fetch(`/api/levels/extra?page=${page}`)
           let json = await levels.json()
-          setArray(Object.values(json))
+          setArray([...array, {page, levels: Object.values(json.data)}])
+          setPages(json.pages)
+          }
         } catch(_) {
 
         }
       })()
-  })
-  let [pastRated, setPastRated] = useState<Array<Record<any, any>>>(data2)
+  }, [page])
+  let [pastRated, setPastRated] = useState<Array<Record<any, any>>>([])
   useEffect(() => {
       (async () => {
         try {
-          let levels = await fetch("/api/unratedextremes")
+          let levels = await fetch("/api/levels/unratedextremes")
           let json = await levels.json()
-          setPastRated(Object.values(json))
+          setPastRated(json)
         } catch(_) {
 
         }
       })()
-  })
+  }, [])
 
+  let updateFunc = async (x: any, n: any)=> {
+    let e = structuredClone(array.find((i:any) => i.page == page).levels.find((i: any) => i.id == n))
+    if(e && !e.list) {
+        let data = await fetch(`/api/levels/${e.id}/list`)
+        if(data.ok) {
+          let json = await data.json()
+          e.list = json
+          let changedArr = structuredClone(array.find((i: any) => i.page == page))
+          changedArr.levels = [...changedArr.levels.filter((i: any) => i.id != n), e].sort((a,b) => a.position - b.position)
+          setArray([...array.filter((i:any) => i.page != page), changedArr])
+        }
+    }
+  }
+
+  let updateFunc2 = async (x: any, n: any)=> {
+    let e = structuredClone(pastRated.find(i => i.id == n))
+    if(e && !e.list) {
+        let data = await fetch(`/api/levels/${e.id}/list`)
+        if(data.ok) {
+          let json = await data.json()
+          e.list = json
+          setPastRated([...pastRated.filter(i => i.id != e?.id), e].sort((a,b) => a.position - b.position))
+        }
+    }
+  }
 
   function botFunction() {
     document.body.scrollTop = document.body.scrollHeight;
@@ -47,9 +75,22 @@ export default function Home({data, data2}: any) {
         <h1 className="page-subtitle">(All Extreme Demons)</h1>
       </div>
     <Container>
+    <Dropdown style={{"display": "grid", "placeItems": "center"}}>
+        <Dropdown.Toggle variant="primary">
+          Page {page}/{pages}&nbsp;
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+        {Array.from(new Array(pages).keys()).map(e => <Dropdown.Item onClick={() => {
+          setPage(e+1)
+        }}>
+            {e+1}
+          </Dropdown.Item>)}
+        </Dropdown.Menu>
+      </Dropdown>
+      <br></br>
     <p style={{"textDecoration": "underline", "textAlign": "center"}} onClick={botFunction} className="white">To the bottom</p>
     <div>
-    {array?.map((e: any)  => {
+    {array?.find((e: any) => e.page == page)?.levels?.map((e: any)  => {
       return (
         <div style={{"display": "grid", "placeItems": "center"}} key={e.position}>
         <Level
@@ -57,8 +98,16 @@ export default function Home({data, data2}: any) {
           name={e.name}
           ytcode={e.ytcode}
           creator={e.host}
-          records={e.list}
+          records={e.list ?? [{
+            name: "",
+            percent: ["", ""],
+            screenshot: false,
+            link: "",
+            hertz: 60
+          }]}
           verifier={e.verifier}
+          id={e.id}
+          onClick={updateFunc}
         ></Level>
         <br></br>
         </div>
@@ -75,8 +124,16 @@ export default function Home({data, data2}: any) {
           name={e.name}
           ytcode={e.ytcode}
           creator={e.host}
-          records={e.list}
+          records={e.list ?? [{
+            name: "",
+            percent: ["", ""],
+            screenshot: false,
+            link: "",
+            hertz: 60
+          }]}
           verifier={e.verifier}
+          id={e.id}
+          onClick={updateFunc2}
         ></Level>
         <br></br>
         </div>
@@ -88,16 +145,3 @@ export default function Home({data, data2}: any) {
     </div>
   )
 }
-
-export async function getServerSideProps() {
-    // Your code
-    let data = await models.levels.find({position: {$gt: 150}}).sort({position: 1})
-    data = JSON.parse(JSON.stringify(data))
-    // Passing data to the Page using props
-    return {
-        props : {
-          data: data.filter(e => !levels.levels.includes(e.name)),
-          data2: data.filter(e => levels.levels.includes(e.name))
-        }
-    }
-  }

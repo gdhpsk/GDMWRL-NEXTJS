@@ -103,8 +103,8 @@ body {
   vertical-align: middle;
   text-align: center;
   color: white;
-  padding-top: 150px;
-  font-size: 10vw;
+  padding-top: 100px;
+  font-size: min(15vw, 200px);
 }
 
 
@@ -127,7 +127,7 @@ body {
   text-align: center;
   line-break: anywhere;
   color: white;
-  font-size: 50px;
+  font-size: min(6vw, 75px);
 }
 
 .bannerone {

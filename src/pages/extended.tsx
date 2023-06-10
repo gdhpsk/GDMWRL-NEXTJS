@@ -3,20 +3,29 @@ import {useState, useEffect} from "react"
 import { Container } from "react-bootstrap"
 import Level from"../components/Level"
 
-export default function Home({data}: any) {
+export default function Home() {
 
-    let [array, setArray] = useState<Array<Record<any, any>>>(data)
-  useEffect(() => {
+    let [array, setArray] = useState<Array<Record<any, any>>>([])
+    useEffect(() => {
       (async () => {
-        try {
-          let levels = await fetch("/api/150")
-          let json = await levels.json()
-          setArray(Object.values(json))
-        } catch(_) {
-
-        }
+        const data = await fetch(`/api/levels/150`)
+        let json = await data.json()
+        setArray(json)
       })()
-  })
+  
+    }, [])
+
+    let updateFunc = async (x: any, n: any)=> {
+      let e = structuredClone(array.find(i => i.id == n))
+      if(e && !e.list) {
+          let data = await fetch(`/api/levels/${e.id}/list`)
+          if(data.ok) {
+            let json = await data.json()
+            e.list = json
+            setArray([...array.filter(i => i.id != e?.id), e].sort((a,b) => a.position - b.position))
+          }
+      }
+    }
 
   function botFunction() {
     document.body.scrollTop = document.body.scrollHeight;
@@ -43,8 +52,16 @@ export default function Home({data}: any) {
           name={e.name}
           ytcode={e.ytcode}
           creator={e.host}
-          records={e.list}
+          records={e.list ?? [{
+            name: "",
+            percent: ["", ""],
+            screenshot: false,
+            link: "",
+            hertz: 60
+          }]}
           verifier={e.verifier}
+          id={e.id}
+          onClick={updateFunc}
         ></Level>
         <br></br>
         </div>
@@ -55,16 +72,4 @@ export default function Home({data}: any) {
     </Container>
     </div>
   )
-}
-
-export async function getServerSideProps() {
-    // Your code
-    const data = await models.levels.find({position: {$lt: 151, $gt: 75}}).sort({position: 1})
-  
-  // Passing data to the Page using props
-  return {
-      props : {
-        data: JSON.parse(JSON.stringify(data))
-      }
-  }
 }

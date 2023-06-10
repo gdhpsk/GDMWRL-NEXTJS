@@ -24,13 +24,13 @@ export default function Home() {
   }
 
 let updateFunc = async (x: any, n: any)=> {
-  let e = structuredClone(array[n-1])
-  if(!e.list) {
+  let e = structuredClone(array.find(i => i.id == n))
+  if(e && !e.list) {
       let data = await fetch(`/api/levels/${e.id}/list`)
       if(data.ok) {
         let json = await data.json()
         e.list = json
-        setArray([...array.filter(i => i.id != e.id), e].sort((a,b) => a.position - b.position))
+        setArray([...array.filter(i => i.id != e?.id), e].sort((a,b) => a.position - b.position))
       }
   }
 }
@@ -60,6 +60,7 @@ let updateFunc = async (x: any, n: any)=> {
             hertz: 60
           }]}
           verifier={e.verifier}
+          id={e.id}
           onClick={updateFunc}
         ></Level>
         <br></br>

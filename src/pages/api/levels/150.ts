@@ -3,7 +3,7 @@ import db from "../../../../firebase"
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    let everything = await getDocs(query(collection(db, "levels"), where("position", "<=", 75), orderBy("position")))
+    let everything = await getDocs(query(collection(db, "levels"), where("position", ">", 75), where("position", "<=", 150), orderBy("position")))
     let data = everything.docs.map(e => {
         return {
             ...e.data(),

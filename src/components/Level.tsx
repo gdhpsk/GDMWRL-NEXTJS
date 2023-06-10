@@ -8,11 +8,12 @@ interface LevelProps {
     creator: string,
     ytcode: string,
     verifier: string,
+    id?: string
     records: [Record<any, any>],
     onClick?: Function
 }
 
-const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifier, onClick }: LevelProps) => {
+const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifier, onClick, id }: LevelProps) => {
     function openWindow() {
         window.open(`https://youtube.com/watch?v=${ytcode}`, "_blank")
     }
@@ -23,7 +24,7 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
                     if(onClick) {
                         e.preventDefault()
                         e.stopPropagation()
-                       await onClick(e,n);
+                       await onClick(e,id);
                     }
                 }}>
                     <div style={{display: "grid", placeItems: "center", width: "inherit"}}>
