@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import React, { useState } from 'react'
 import { Row, Col, Accordion, Button } from 'react-bootstrap'
 import Swal from 'sweetalert2'
@@ -57,7 +56,7 @@ const Level: React.FC<LeaderboardProps> = ({ name, socials, nationality, points,
             <p className={"white " + styles.entry} onClick={async () => {
                 let profile = await onClick(id)
                 display(profile)
-            }}><b>{nationality ? <abbr title={nationality}><Image width="24" height="18" alt="flag" className={styles.nationality} src={`/nationalities/${nationality}.svg`} /></abbr> : ""} {name} ({points} {bywrs ? "record" : "point"}{points == 1 ? "" : "s"})</b></p>
+            }}><b>{nationality ? <abbr title={nationality}><img width="24" height="18" alt="flag" className={styles.nationality} src={`/nationalities/${nationality}.svg`} loading={"lazy"}/></abbr> : ""} {name} ({points} {bywrs ? "record" : "point"}{points == 1 ? "" : "s"})</b></p>
         </div>
     )
 }
