@@ -1,5 +1,6 @@
 :root {
   --thumb-width: min(260px, calc((4/35)*260 * 1vw));
+  --button-color: #536778
 }
 
 
@@ -23,7 +24,14 @@ body {
 }
 
 .accordion-button {
-  border: none;
+  /* border: none; */
+  border-radius: 15px !important;
+  background-color: #111111;
+}
+
+.accordion-button:focus, .accordion-button:active {
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .accordion-button::after {
@@ -48,15 +56,19 @@ body {
   color: white;
 }
 
+.accordion-collapse {
+  border: 0;
+}
+
 .levelcard {
   box-shadow: 0 5px 10px 0 rgb(0 0 0);
-  border: 20px solid #333333;
+  border: 20px solid #212121;
     background-color: #212121;
-    border-radius: 20px;
+    border-radius: 35px;
     width: min(1000px, 100%);
 }
 .play {
-  background: #536778;
+  background: var(--button-color);
   border-radius: 5px 5px 5px 5px;
   font-size: 0.5em;
   color: #ffffff;
@@ -100,8 +112,12 @@ body {
   align-items: flex-start;
 }
 
-.thumb:hover .play {
-  background-color: red;
+.thumbnail:hover ~ .play {
+  --button-color: red;
+}
+
+.play:hover {
+  --button-color: red;
 }
 
 .page-title {

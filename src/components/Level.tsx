@@ -34,7 +34,7 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
             <p style={{textAlign: "left", marginTop: "0px", fontWeight: "bolder", fontSize: "min(22px, 2.5vw)"}}><span style={{"color": "gray"}}>Verifier: {verifier}</span></p>
             </div>
             <div className="thumb">
-                    <Image src={`https://i.ytimg.com/vi/${ytcode.split("&t=")[0]}/mqdefault.jpg`} style={{width: "var(--thumb-width)"}} width={260} height={156} onClick={openWindow} alt="Thumbnail" />
+                    <Image className="thumbnail" src={`https://i.ytimg.com/vi/${ytcode.split("&t=")[0]}/mqdefault.jpg`} style={{width: "var(--thumb-width)"}} width={260} height={156} onClick={openWindow} alt="Thumbnail" />
                     <a className="play" href={`https://www.youtube.com/watch?v=${ytcode}`} target="_blank" rel={"noreferrer"}></a>
             </div>
             </div>
