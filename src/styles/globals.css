@@ -1,14 +1,20 @@
+:root {
+  --thumb-width: min(260px, calc((4/35)*260 * 1vw));
+}
+
+
 body {
   background-color:  #333333;
 }
 
 .dude {
-  font-size: 20px;
-  text-align: left;
+  font-size: min(35px, 4vw);
+  text-align: left !important;
   color: white;
+  font-weight:bolder;
   /* margin-bottom: 20px; 
   margin-top: 20px; */
-  line-break: anywhere;
+  line-break:anywhere;
   text-align: center;
 }
 
@@ -35,7 +41,7 @@ body {
 }
 
 .accordion-button:not(.collapsed) {
-  background-color: #380207;
+  background-color: black;
 }
 
 .white {
@@ -47,15 +53,8 @@ body {
   border: 20px solid #333333;
     background-color: #212121;
     border-radius: 20px;
-    width: 70%;
+    width: min(1000px, 100%);
 }
-
-@media screen and (max-width: 780px) {
-  .levelcard {
-    width: 100%
-  }
-}
-
 .play {
   background: #536778;
   border-radius: 5px 5px 5px 5px;
@@ -64,14 +63,13 @@ body {
   height: 3em;
   /* margin: 0px auto; */
   padding: 0;
-  position: absolute;
   text-indent: 0.1em;
   transition: all 150ms ease-out;
   width: 4em;
   opacity: 0.8;
   top: 70%;
   left: 49.3%;
-  transform: translate(-50%, -50%);
+  transform: translate(calc((-9/16)*var(--thumb-width)), 250%);
 }
 .play::after {
   border-style: solid;
@@ -95,8 +93,15 @@ body {
   right: -5%;
   top: 9%;
 }
+
+.thumb {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
 .thumb:hover .play {
-  background: red;
+  background-color: red;
 }
 
 .page-title {

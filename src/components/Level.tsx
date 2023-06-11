@@ -28,13 +28,13 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
                     }
                 }}>
                     <div style={{display: "grid", placeItems: "center", width: "inherit"}}>
-                    <div>
-                <p className="dude"><b><b>{n > 150 ? "" : `${n}. `}{name}</b></b></p>&nbsp;
-            <p style={{textAlign: "center", marginTop: "-25px"}}><b><b><span style={{"color": "gray"}}>Creators: {creator}</span></b></b></p>
-            <p style={{textAlign: "center", marginTop: "-15px"}}><b><b><span style={{"color": "gray"}}>Verifier: {verifier}</span></b></b></p>
+                    <div style={{width: "calc(100% - 260px + (260px - var(--thumb-width)))", marginBottom: "-180px", marginLeft: "auto", paddingLeft: "min(30px, 3vw)"}}>
+                <p className="dude">{n > 150 ? "" : `${n}. `}{name}</p>&nbsp;
+            <p style={{textAlign: "left", marginTop: "-10px", fontWeight: "bolder", fontSize: "min(22px, 2.5vw)"}}><span style={{"color": "gray"}}>Creators: {creator}</span></p>
+            <p style={{textAlign: "left", marginTop: "0px", fontWeight: "bolder", fontSize: "min(22px, 2.5vw)"}}><span style={{"color": "gray"}}>Verifier: {verifier}</span></p>
             </div>
             <div className="thumb">
-                    <Image src={`https://i.ytimg.com/vi/${ytcode.split("&t=")[0]}/mqdefault.jpg`} width={200} height={120} onClick={openWindow} alt="Thumbnail" />
+                    <Image src={`https://i.ytimg.com/vi/${ytcode.split("&t=")[0]}/mqdefault.jpg`} style={{width: "var(--thumb-width)"}} width={260} height={156} onClick={openWindow} alt="Thumbnail" />
                     <a className="play" href={`https://www.youtube.com/watch?v=${ytcode}`} target="_blank" rel={"noreferrer"}></a>
             </div>
             </div>
