@@ -17,7 +17,7 @@ export default function Home() {
 			<br></br>
 ➢ The minimum requirement for each level corresponds to a higher % than the current record.
 <br></br>
-{"➢ If a level doesn&#39;t have any records, the minimum requirement for the World Record is at least 10%."}
+➢ If a level doesn&#39;t have any records, the minimum requirement for the World Record is at least 10%.
 <br></br>
 ➢ Only runs from 0% are acceptable as official World Records.
 <br></br>
@@ -44,7 +44,7 @@ export default function Home() {
  name={"Name"}
  ytcode={"oh0FyZHZST8"}
  creator={"Creators"}
- records={[{"name":"Name","percent":["percent","screenshot/clip"],"screenshot":false,"link":"https://youtube.com","hertz":"hertz","_id":"63c0b32328158a91b338558f"}]}
+ records={[{"name":"Name","percent":["video","screenshot/clip"],"screenshot":false,"link":"https://youtube.com","hertz":"0","_id":"63c0b32328158a91b338558f"}]}
  verifier={"Verifier"}
 ></Level>
   <br></br><br></br>
