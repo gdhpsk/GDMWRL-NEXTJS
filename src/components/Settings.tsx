@@ -15,6 +15,8 @@ const Auth: React.FC = () => {
         color: "white",
         confirmButtonColor: 'black',
         html: <>
+        <h5 style={{textAlign: "center"}}>Email: {(auth.currentUser as any).email}</h5>
+        <br></br>
             <div style={{display: "grid", placeItems: "center"}}>
                 <Button color="red" onClick={async () => {
                    await signOut(auth)
@@ -25,6 +27,9 @@ const Auth: React.FC = () => {
                 <br></br>
                 <Button color="red" onClick={async () => {
                    await sendPasswordResetEmail(auth, (auth.currentUser as any).email)
+                   mySwal.update({
+                    html: `<h4>Check your inbox in your email, ${(auth.currentUser as any).email}, and you should be able to reset your password from there!</h4>`
+               })
                 }}>Reset Password</Button>
                 <br></br>
                 <Button color="red" onClick={async () => {
