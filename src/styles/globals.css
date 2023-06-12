@@ -120,6 +120,11 @@ body {
   --button-color: red;
 }
 
+#login {
+  display: grid;
+  align-items: center;
+}
+
 .page-title {
   vertical-align: middle;
   text-align: center;

@@ -1,6 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Collapse, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 import { NextPageContext } from 'next'
+import Auth from './Auth'
+import { getAuth, onAuthStateChanged, sendEmailVerification, signOut } from 'firebase/auth'
+import Settings from './Settings'
 
 interface HeaderProps {
   name: string
@@ -14,6 +17,20 @@ function App({name, mainRoutes, active}: HeaderProps) {
   if(active == "/index") {
     active = "/"
   }
+  let auth = getAuth()
+  let [loggedIn, setLoggedIn] = useState(auth?.currentUser)
+  onAuthStateChanged(auth, setLoggedIn) 
+  useEffect(() => {
+    (async () => {
+      if(loggedIn) {
+        if(!loggedIn.emailVerified) {
+          await sendEmailVerification(loggedIn)
+          await signOut(auth)
+          return
+        }
+      }
+    })()
+  })
   function changeView() {
     let type = document.getElementById("responsive-navbar-nav")
     if(type) {
@@ -39,6 +56,7 @@ function App({name, mainRoutes, active}: HeaderProps) {
                 {e}
               </Nav.Link>
             ))}  
+            {loggedIn ? <Settings></Settings> : <Auth></Auth>}
           </Navbar.Collapse>
       </Container>
     </Navbar>

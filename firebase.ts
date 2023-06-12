@@ -2,13 +2,14 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import {getFirestore} from "firebase/firestore"
+import {getAuth} from "firebase/auth"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: process.env.NEXT_API,
+  apiKey: "AIzaSyAjMVk_yFoTBrIjARo9DuOi3xr_3qDC5Ss",
   authDomain: "mwrl-7b27f.firebaseapp.com",
   databaseURL: "https://mwrl-7b27f-default-rtdb.firebaseio.com",
   projectId: "mwrl-7b27f",
@@ -19,11 +20,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let app = firebase.initializeApp(firebaseConfig, "client");
+let app = firebase.initializeApp(firebaseConfig);
 
 
 // Initialize Cloud Firestore and get a reference to the service
-const db = getFirestore(app)
-
-export default db
-
+getFirestore(app)
+getAuth(app)
