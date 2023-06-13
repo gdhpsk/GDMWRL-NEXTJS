@@ -54,6 +54,7 @@ export default function Settings() {
         let token = await user.getIdToken()
         let data = await fetch("/api/users?token="+token)
         let json = await data.json()
+        json = json.filter((e: any) => !mods.find((x: any) => x.uid == e.uid))
         changeAllUsers(json)
       })()
     }, [listType])
