@@ -76,6 +76,11 @@ const Auth: React.FC = () => {
             password: (document.getElementById("sign_pass") as any).value,
             password2: (document.getElementById("sign_pass2") as any).value
         }
+        if(!login.name) {
+            errs.name = "Please input a name!"
+            setLogErr(errs)
+            return
+        }
         if(login.password !== login.password2) {
             errs.password2 = "Please input the same password!"
             setLogErr(errs)

@@ -3,7 +3,7 @@ import { Row, Col, Accordion, Button, Nav, InputGroup, Form } from 'react-bootst
 import Swal from 'sweetalert2'
 import styles from "@/styles/Leaderboard.module.css"
 import withReactContent from 'sweetalert2-react-content'
-import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateCurrentUser, updateProfile, verifyBeforeUpdateEmail } from 'firebase/auth'
+import { createUserWithEmailAndPassword, deleteUser, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateCurrentUser, updateProfile, verifyBeforeUpdateEmail } from 'firebase/auth'
 
 const Auth: React.FC = () => {
     const mySwal = withReactContent(Swal);
@@ -100,6 +100,23 @@ const Auth: React.FC = () => {
                         </Form>
                     })
                 }}>Change Email</Button>
+                <br></br>
+                <Button color="red" onClick={async () => {
+                    if((auth.currentUser as any).uid == "UmgdQBJPp6Wxdr1lShhCMGUwOZo1") return;
+                deleteUser(auth.currentUser as any).then(() => {
+                    mySwal.update({
+                        html: `<h4>You have successfully deleted your account.</h4>`
+                   })
+                }).catch(e => {
+                    switch(e.code) {
+                        case "auth/requires-recent-login":
+                            mySwal.update({
+                                html: `<h4>Please login again, your credential is too old.</h4>`
+                           })
+                        break;
+                    }
+                })
+                }}>Delete Account</Button>
             </div>
         </>
     })
