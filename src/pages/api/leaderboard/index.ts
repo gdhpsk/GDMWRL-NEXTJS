@@ -25,6 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
     })
     let resolved = await Promise.all(data)
+    res.setHeader("Access-Control-Allow-Origin", "*")
     res.setHeader('Cache-Control', 'public, s-maxage=86400');
      res.status(200).json(resolved);
   }

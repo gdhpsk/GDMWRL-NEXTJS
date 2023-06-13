@@ -13,6 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             id: e.id
         }
     }).filter(e => !levels.levels.includes(e.name))
+    res.setHeader("Access-Control-Allow-Origin", "*")
     res.setHeader('Cache-Control', 'public, s-maxage=86400');
      res.status(200).json({pages: Math.ceil(count.data().count / 100), data});
   }
