@@ -84,11 +84,10 @@ db.settings({
     //     }
     //     let real = await exists.get()
     //     let profile = db.collection(`leaderboard/${real.docs[0].id}/${classify(parseInt(data.percent[0]), data.screenshot, level.data().position)}`)
-    //     await profile.add({
+    //     await profile.doc(record.id).create({
     //       name: level.data().name,
     //       percent: parseInt(data.percent[0]),
     //       hertz: data.hertz,
-    //       id: record.id,
     //       verification: data.verification
     //     })
     //   }
