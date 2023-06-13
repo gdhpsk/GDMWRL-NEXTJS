@@ -9,7 +9,6 @@ export default function Settings() {
     let [displayMod, setDisplayMod] = useState<any>(null)
     let [user, setUser] = useState<any>(null)
     let [listType, changeListType] = useState("profiles")
-    let [width, setWidth] = useState({width:0})
     let [allUsers, changeAllUsers] = useState([])
     let [editRole, showEditRole] = useState<any>(false)
     let [mods, setMods] = useState<any>([])
@@ -58,16 +57,20 @@ export default function Settings() {
         changeAllUsers(json)
       })()
     }, [listType])
+
     useEffect(() => {
-      changeIt()
-     if(!perms || mods.length) return;
-     (async () => {
-      let token = await user.getIdToken();
-      let data = await fetch(`/api/mods?token=${token}`)
-      let json = await data.json()
-      json = json.sort((a: any,b: any) => b.role.localeCompare(a.role))
-      setMods(json)
-     })()
+        changeIt()
+       if(!perms || mods.length) {
+        setMods(mods)
+        return
+       };
+       (async () => {
+        let token = await user.getIdToken();
+        let data = await fetch(`/api/mods?token=${token}`)
+        let json = await data.json()
+        json = json.sort((a: any,b: any) => b.role.localeCompare(a.role))
+        setMods(json)
+       })()
     })
     if(perms == false) {
         return <ErrorPage></ErrorPage>
@@ -101,10 +104,18 @@ export default function Settings() {
             })
           })
           let json = await data.json();
+          if(data.status == 201) {
+            setMods([...mods, {
+              ...e,
+              role: "editor"
+            }])
+          }
+          try {
           (document.getElementById(e.uid) as any).innerText = json.message;
           setTimeout(() => {
-            (document.getElementById(e.uid) as any).innerText = ""
-          }, 3000)
+            changeAllUsers(allUsers.filter((x: any) => x.uid != e.uid))
+          }, 2000)
+        } catch(_) {}
         }} key={e.name}>
           <h1 style={{textAlign: "center"}} className="white">{e.name}</h1>
           <h5 style={{textAlign: "center"}} className="white">Email: {e.email}</h5>
@@ -150,10 +161,22 @@ export default function Settings() {
               })
             })
             let json = await data.json();
+            if(data.status == 201) {
+              setMods(mods.map((e: any) => {
+                if(e.uid !== displayMod.uid) {
+                  return e
+                } else {
+                  e.role = role.toLowerCase()
+                  return e
+                }
+              }))
+            };
+            try {
             (document.getElementById("err1") as any).innerText = json.message;
             setTimeout(() => {
               (document.getElementById("err1") as any).innerText = ""
             }, 3000)
+          } catch(_) {}
           }}>Submit</Button></Form> : ""}
           <br></br>
           <Button type="button" onClick={async () => {
@@ -169,10 +192,17 @@ export default function Settings() {
               })
             })
             let json = await data.json();
+            try {
             (document.getElementById("err2") as any).innerText = json.message;
             setTimeout(() => {
-              (document.getElementById("err2") as any).innerText = ""
-            }, 3000)
+              if(data.status == 201) {
+                setDisplayMod(null)
+                setMods(mods.filter((e: any) => e.uid != displayMod.uid))
+              }
+            }, 2000)
+          } catch(_) {
+
+          }
           }}>Delete User</Button>
           <p id="err2" className="white"></p>
           <br></br>
