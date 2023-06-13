@@ -78,12 +78,12 @@ export default function Settings() {
     <hr className="white"/>
     <div id={styles.content}>
       <div id={styles.list}>
-        <div style={{display: "grid", placeItems: "center"}}>
-        <Button onClick={() => {
+      {perms == "owner" ?   <><div style={{display: "grid", placeItems: "center"}}>
+      <Button onClick={() => {
           changeListType(listType == "profiles" ? "users" : "profiles")
         }}>{listType == "users" ? "View Mods" : "Add User"}</Button>
         </div>
-        <hr/>
+        <hr/></> : ""}
         <section style={{display: `${listType == "users" ? "block" : "none"}`}}>
         {allUsers.map((e: any) => <div style={{paddingTop: "20px", paddingBottom: "20px"}} onClick={async () => {
           let token = await user.getIdToken()
