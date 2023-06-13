@@ -19,7 +19,7 @@ function App({name, mainRoutes, active}: HeaderProps) {
   }
   let auth = getAuth()
   let [loggedIn, setLoggedIn] = useState(auth?.currentUser)
-  onAuthStateChanged(auth, (e) => {
+  onAuthStateChanged(auth, async (e) => {
     setLoggedIn(e)
   }) 
   useEffect(() => {

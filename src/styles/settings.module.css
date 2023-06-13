@@ -1,0 +1,41 @@
+#list {
+    width:500px;
+    height: 96vh;
+    overflow-y: scroll
+}
+
+#list div {
+    background-color: #252525;
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+#list div:hover {
+    background-color: #454545 !important;
+}
+
+#list div:nth-child(odd) {
+    background-color: #151515;
+}
+
+#content {
+    display: flex;
+}
+
+#show {
+    width:-webkit-fill-available;
+    height: 96vh;
+    overflow-y: scroll;
+    display: grid;
+    place-items: center;
+}
+
+@media screen and (max-width: 1000px) {
+    #show {
+        display: none;
+        width: 100%;
+    }
+    #list {
+        width:100%
+    }
+}

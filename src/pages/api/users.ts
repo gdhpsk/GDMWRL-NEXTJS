@@ -9,13 +9,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({message: "You cannot perform this action."})
   }
     let users = await authentication.listUsers(1000)
-    let mod_users = users.users.filter(e => ["editor", "owner"].includes(e?.customClaims?.role))
+    let mod_users = users.users.filter(e =>e.emailVerified)
     let list = mod_users.map(e => {
       return {
         uid: e.uid,
         email: e.email,
-        name: e.displayName,
-        role: e.customClaims?.role
+        name: e.displayName
       }
     })
     res.status(200).json(list)

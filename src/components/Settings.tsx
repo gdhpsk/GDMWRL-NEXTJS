@@ -14,7 +14,7 @@ const Auth: React.FC = () => {
             let go = await auth.currentUser?.getIdTokenResult(true)
             setType(go?.claims?.role ?? "user")
         })()
-    })
+    }, [])
     function display() { 
     mySwal.fire({
         background: "#333333",
