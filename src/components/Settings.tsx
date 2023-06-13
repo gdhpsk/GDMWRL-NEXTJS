@@ -8,6 +8,13 @@ import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signIn
 const Auth: React.FC = () => {
     const mySwal = withReactContent(Swal);
     let auth = getAuth()
+    let [type, setType] = useState("")
+    useEffect(() => {
+        (async () => {
+            let go = await auth.currentUser?.getIdTokenResult(true)
+            setType(go?.claims?.role ?? "user")
+        })()
+    })
     function display() { 
     mySwal.fire({
         background: "#333333",
@@ -16,6 +23,8 @@ const Auth: React.FC = () => {
         confirmButtonColor: 'black',
         html: <>
         <h5 style={{textAlign: "center"}}>Email: {(auth.currentUser as any).email}</h5>
+        <br></br>
+        <h6 style={{textAlign: "center"}}>User Type: {type}</h6>
         <br></br>
             <div style={{display: "grid", placeItems: "center"}}>
                 <Button color="red" onClick={async () => {
@@ -44,7 +53,7 @@ const Auth: React.FC = () => {
                             <Form.Control required aria-describedby='email' placeholder='Name...' id="new_name"></Form.Control>
                         </InputGroup>
                         <br></br>
-                        <Button type="button" onClick={() => {
+                        <Button type="button" onClick={async () => {
                             let name = (document.getElementById("new_name") as any).value
                             updateProfile(auth.currentUser as any, {displayName: name})
                             mySwal.update({

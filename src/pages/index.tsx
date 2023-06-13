@@ -3,6 +3,7 @@
 import {useState, useEffect} from "react"
 import { Container } from "react-bootstrap"
 import Level from"../components/Level"
+import { getAuth } from "firebase/auth"
 
 export default function Home() {
   let [array, setArray] = useState<Array<Record<any, any>>>([])
@@ -14,6 +15,7 @@ export default function Home() {
     })()
 
   }, [])
+
   function botFunction() {
     document.body.scrollTop = document.body.scrollHeight;
     document.documentElement.scrollTop = document.body.scrollHeight; 

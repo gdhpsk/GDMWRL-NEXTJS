@@ -1,5 +1,6 @@
 import * as application from "firebase-admin/app"
 import * as database from "firebase-admin/firestore"
+import * as auth from "firebase-admin/auth"
 
 let apps = application.getApps().length
 const firebase = apps ? application.getApp("server") : application.initializeApp({
@@ -21,3 +22,4 @@ const firebase = apps ? application.getApp("server") : application.initializeApp
   })
 }
   export default db
+  export const authentication = auth.getAuth(firebase)

@@ -19,7 +19,13 @@ function App({name, mainRoutes, active}: HeaderProps) {
   }
   let auth = getAuth()
   let [loggedIn, setLoggedIn] = useState(auth?.currentUser)
-  onAuthStateChanged(auth, setLoggedIn) 
+  onAuthStateChanged(auth, async (e) => {
+    let token = await e?.getIdToken(true)
+    let ok = await fetch("/api/mods?token="+token)
+    let ko = await ok.text()
+    console.log(ko)
+    setLoggedIn(e)
+  }) 
   useEffect(() => {
     (async () => {
       if(loggedIn) {
