@@ -26,8 +26,6 @@
     width:-webkit-fill-available;
     height: 96vh;
     overflow-y: scroll;
-    display: grid;
-    place-items: center;
 }
 
 @media screen and (max-width: 1200px) {
