@@ -27,19 +27,6 @@ export default function Home() {
         }
       })()
   }, [page])
-
-  let updateFunc = async (x: any, n: any)=> {
-    let e = structuredClone(array.find((i:any) => i.page == page).levels.find((i: any) => i.id == n))
-    if(e && !e.list) {
-        let data = await fetch(`/api/levels/${e.id}/list`)
-          let json = await data.json()
-          e.list = json
-          let changedArr = structuredClone(array.find((i: any) => i.page == page))
-          changedArr.levels = [...changedArr.levels.filter((i: any) => i.id != n), e].sort((a,b) => a.position - b.position)
-          setArray([...array.filter((i:any) => i.page != page), changedArr])
-    }
-  }
-
   function botFunction() {
     document.body.scrollTop = document.body.scrollHeight;
     document.documentElement.scrollTop = document.body.scrollHeight; 
@@ -85,16 +72,8 @@ export default function Home() {
           name={e.name}
           ytcode={e.ytcode}
           creator={e.host}
-          records={e.list ?? [{
-            name: "",
-            percent: ["", ""],
-            screenshot: false,
-            link: "",
-            hertz: 60
-          }]}
+          records={e.list}
           verifier={e.verifier}
-          id={e.id}
-          onClick={updateFunc}
         ></Level>
         <br></br>
         </div>

@@ -11,13 +11,21 @@ import Script from "next/script"
 
 export default function Home() {
     let [wrs, setByWrs] = useState<Boolean>(false)
-    function calcPoints({count}: any) {
-        let {records, completions, extralist_comp, extralist_prog, screenshot, minus} = count
+    function calcPoints(wr: any) {
+        let {records, completions, extralist_comp, extralist_prog, screenshot, minus} = {
+          records: wr.records.filter((e: any) => e != "none").length,
+          completions: wr.completions.filter((e: any) => e != "none").length,
+          screenshot: wr.screenshot.filter((e: any) => e != "none").length,
+          extralist_comp: wr.extralist.filter((e: any) => e != "none").filter((e: any) => e.percent == 100).length,
+          extralist_prog: wr.extralist.filter((e: any) => e != "none").filter((e: any) => e.percent != 100).length,
+          minus: wr.minus
+        }
         let points = records+completions*2+extralist_comp
         if(wrs) {
           points -= completions
           points += extralist_prog
           points += screenshot
+          console.log(points)
             return points
         } else {
             return points - (minus || 0)
@@ -54,28 +62,6 @@ export default function Home() {
     setLead([...lead].sort((a,b) => calcPoints(b) - calcPoints(a)))
   }, [wrs])
 
- async function updateFunc(id: string) {
-    let profile = structuredClone(lead.find(e => e.id == id))
-    if(profile && !profile.records) {
-        let getData = async (col: string) => {
-            let data = await fetch(`/api/leaderboard/${id}/${col}`)
-            let json = await data.json()
-            return json
-        }
-        let records = await getData("records")
-        let completions = await getData("completions")
-        let extralist = await getData("extralist")
-        let screenshot = await getData("screenshot")
-        profile.records = records
-        profile.completions = completions
-        profile.extralist = extralist
-        profile.screenshot = screenshot
-        setLead([...lead.filter(e => e.id != id), profile].sort((a,b) => calcPoints(b) - calcPoints(a)))
-        return profile
-    } else {
-      return profile
-    }
-  }
   return (
     <div>
     <Script src="sweetalert2/dist/sweetalert2.min.js" defer></Script>
@@ -92,18 +78,16 @@ export default function Home() {
         <>
         <Leaderboard
           name={e.name}
-          records={e.records ?? []}
-          completions={e.completions ?? []}
-          extralist={e.extralist ?? []}
-          screenshot={e.screenshot ?? []}
+          records={e.records}
+          completions={e.completions}
+          extralist={e.extralist}
+          screenshot={e.screenshot}
           nationality={e.nationality}
           socials={e.socials}
           points={calcPoints(e)}
           key={e.id}
-          id={e.id}
           levels={array}
           bywrs={wrs}
-          onClick={updateFunc}
         ></Leaderboard>
         <br></br>
         </>

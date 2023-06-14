@@ -14,13 +14,11 @@ interface LeaderboardProps {
     socials: Array<any>,
     points: number,
     levels: Array<any>
-    bywrs: Boolean,
-    onClick: Function,
-    id: string
+    bywrs: Boolean
 }
 
-const Level: React.FC<LeaderboardProps> = ({ name, socials, nationality, points, levels, bywrs, onClick, id }: LeaderboardProps) => {
-    function display({records, completions, extralist, screenshot}: any) {
+const Level: React.FC<LeaderboardProps> = ({ name, socials, nationality, points, levels, bywrs, records, completions, extralist, screenshot }: LeaderboardProps) => {
+    function display() {
         let generateHTML = (list: Array<any>) => {
             list.sort((a: any, b: any) => a.name.localeCompare(b.name))
             list.sort((a: any, b: any) => levels?.find((j: any) => j.name == a.name)?.position ?? (1+levels.length) - levels.find((j: any) => j.name == b.name)?.position ??  (1+levels.length))
@@ -34,7 +32,7 @@ const Level: React.FC<LeaderboardProps> = ({ name, socials, nationality, points,
             return txt
         }
         let socialsarr = []
-        for(let i = 0; i < socials.length; i++) {
+        for(let i = 0; i < socials?.length ?? 0; i++) {
             for(const item in socials[i]) {
                 let ok = socials[i]
                 let title = `${item.charAt(0).toUpperCase()}${item.slice(1)}`
@@ -53,10 +51,7 @@ const Level: React.FC<LeaderboardProps> = ({ name, socials, nationality, points,
     }
     return (
         <div style={{display: "grid", placeItems: "center"}}>
-            <p className={"white " + styles.entry} onClick={async () => {
-                let profile = await onClick(id)
-                display(profile)
-            }}><b>{nationality ? <abbr title={nationality}><img width="24" height="18" alt="flag" className={styles.nationality} src={`/nationalities/${nationality}.svg`} loading={"lazy"}/></abbr> : ""} {name} ({points} {bywrs ? "record" : "point"}{points == 1 ? "" : "s"})</b></p>
+            <p className={"white " + styles.entry} onClick={async () => display()}><b>{nationality ? <abbr title={nationality}><img width="24" height="18" alt="flag" className={styles.nationality} src={`/nationalities/${nationality}.svg`} loading={"lazy"}/></abbr> : ""} {name} ({points} {bywrs ? "record" : "point"}{points == 1 ? "" : "s"})</b></p>
         </div>
     )
 }
