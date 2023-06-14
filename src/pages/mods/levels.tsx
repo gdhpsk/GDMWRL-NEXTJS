@@ -135,7 +135,7 @@ export default function Settings() {
                     color: "white",
                     confirmButtonColor: 'black',
                     html: <>
-                        <h5>To recap, here are all the changes you made on the level "{level.name}" by {level.host}:</h5>
+                        <h5>To recap, here are all the changes you made on the level &quot;{level.name}&quot; by {level.host}:</h5>
                         <br></br>
                         {changed.map((e: any) => <p key={e[0]}>{e[0]}: {e[1]} {"=>"} {editedLevel[e[0]]}</p>)}
                         <br></br>
