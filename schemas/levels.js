@@ -54,4 +54,4 @@ var levelsSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model("levels", levelsSchema)
+module.exports = mongoose.models.levels || mongoose.model("levels", levelsSchema)

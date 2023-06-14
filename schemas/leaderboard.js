@@ -20,4 +20,4 @@ var leaderboard = new mongoose.Schema({
     name: String
 })
 
-module.exports = mongoose.model("leaderboard", leaderboard)
+module.exports = mongoose.models.leaderboard || mongoose.model("leaderboard", leaderboard)

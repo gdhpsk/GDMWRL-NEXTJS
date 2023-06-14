@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import next from "next";
 import fs from "fs/promises"
 import apiRoute from"./api/public"
-import levels from "./schemas/levels"
+import levels from "../schemas/levels"
 import * as application from "firebase-admin/app"
 import * as database from "firebase-admin/firestore"
 if(!process.env.password) {
@@ -11,7 +11,7 @@ if(!process.env.password) {
 }
 import mongoose from "mongoose"
 import Level from "./firebase/levels";
-import leaderboard from "./schemas/leaderboard";
+import leaderboard from "../schemas/leaderboard";
 mongoose.connect(`mongodb+srv://gdhpsk:${process.env.password}@gdhpsk-data.ldfbk.mongodb.net/test`)
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });

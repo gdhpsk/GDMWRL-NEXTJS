@@ -1,8 +1,8 @@
 import express from "express"
 const app = express.Router()
-import leaderboard from "../schemas/leaderboard"
+import leaderboard from "../../schemas/leaderboard"
 import unratedextremes from "../../unrated.json"
-import levels from "../schemas/levels"
+import levels from "../../schemas/levels"
 import cache from "node-cache"
 let myCache = new cache()
 
