@@ -295,7 +295,7 @@ export default function Settings() {
         <br></br>
         {!level?.list.length || level.list[0].name == "" ? <h1 style={{textAlign: "center"}} className="white">No list records</h1> : level?.list?.map((e: any) => {
           let i = level.list.findIndex((x: any) => x._id == e._id)
-         return <div>
+         return <div key={e.link}>
             <h1 style={{textAlign: "center"}} className="white">Name: <input style={{width: `${editedLevel.list[i].name.length}ch`}} defaultValue={level.list[i].name} onChange={(e:any) => {
            setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
