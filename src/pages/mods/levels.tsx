@@ -200,7 +200,6 @@ export default function Settings() {
                     return e[1] != editedLevel[e[0]]
                   }
                 })
-                console.log(changed)
                 await new Promise((resolve, reject) => {
                   mySwal.fire({
                     background: "#333333",
@@ -243,7 +242,10 @@ export default function Settings() {
                   color: "white",
                   confirmButtonColor: 'black',
                 })
-              } catch(_) {
+                setTimeout(() => {
+                  setEditedLevel(level)
+                }, 0)
+              } catch(_) { 
 
               }
             }}>Save</Button>
