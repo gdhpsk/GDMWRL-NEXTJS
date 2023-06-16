@@ -11,6 +11,8 @@ export default function Settings() {
     let [level, changeLevel] = useState<any>(null);
     let [originalSet, setOriginalSet] = useState<any>([])
     let [levels, setLevels] = useState<any>([])
+    let [new150, setNew150] = useState("")
+    let [move150below, setMove150Below] = useState("")
     let [editedLevel, setEditedLevel] = useState<any>(null)
     let auth = getAuth()
     onAuthStateChanged(auth, (u) => {
@@ -51,9 +53,7 @@ export default function Settings() {
         (async () => {
             let data = await fetch("/api/levels")
             let json = await data.json() 
-            if(!levels.length) {
             setLevels(json)
-            }
             setOriginalSet(json)
         })()
     })
@@ -193,6 +193,52 @@ export default function Settings() {
           {!objectEquals(level, editedLevel) ? <div style={{display: "grid", placeItems: "center"}}>
             <Button style={{fontSize: "30px"}} onClick={async () => {
               try {
+                if(level.position > 150 && editedLevel.position <= 150) {
+                  await new Promise((resolve, reject) => {
+                    mySwal.fire({
+                      background: "#333333",
+                      titleText: `Move 150 Level Below?`,
+                      color: "white",
+                      confirmButtonColor: 'black',
+                      html: <>
+                        <InputGroup>
+                          <InputGroup.Text id="150name">Level Name</InputGroup.Text>
+                          <Form.Control aria-describedby="150name" placeholder="Level..." id="name150" onChange={(e) => {
+                            setTimeout(() => {
+                              let {value} = e.target
+                            setMove150Below(value)
+                            }, 0)
+                          }}></Form.Control>
+                          <Button style={{float: "left"}} onClick={() => {
+                              resolve(0)
+                          }}>Go</Button>
+                        </InputGroup>
+                      </>
+                    })
+                }) 
+              }
+              if(level.position <= 150 && editedLevel.position > 150) {
+                await new Promise((resolve, reject) => {
+                  mySwal.fire({
+                    background: "#333333",
+                    titleText: `New 150 Level?`,
+                    color: "white",
+                    confirmButtonColor: 'black',
+                    html: <>
+                      <InputGroup>
+                        <InputGroup.Text id="150name">Level Name</InputGroup.Text>
+                        <Form.Control aria-describedby="150name" placeholder="Level..." onChange={(e: any) => {
+                          setTimeout(() => {
+                            let {value} = e.target
+                          setNew150(value)
+                          }, 0)
+                        }}></Form.Control>
+                        <Button style={{float: "left"}} onClick={resolve}>Go</Button>
+                      </InputGroup>
+                    </>
+                  })
+              }) 
+            }
                 let changed = Object.entries(level).filter((e: any) => {
                   if(e[0] == "list") {
                     return !objectEquals(e[1], editedLevel[e[0]])
@@ -209,6 +255,8 @@ export default function Settings() {
                     html: <>
                         <h5>To recap, here are all the changes you made on the level &quot;{level.name}&quot; by {level.host}:</h5>
                         <br></br>
+                        {new150 ? <p>New #150 level: {new150}</p> : ""}
+                        {move150below ? <p>Current #150 level below: {move150below}</p> : ""}
                         {changed.map((e: any) => {
                           if(e[0] != "list") {
                             return <p key={e[0]}>{e[0]}: {e[1]} {"=>"} {editedLevel[e[0]]}</p>
@@ -236,15 +284,32 @@ export default function Settings() {
                     </>
                   })
                 })
+                let authToken = await auth.currentUser?.getIdToken()
+                let data = await fetch("/api/levels/edit", {
+                  method: "PATCH",
+                  headers: {
+                    'content-type': "application/json",
+                  },
+                  body: JSON.stringify({
+                    token: authToken,
+                    changes: Object.fromEntries(changed.map((e: any) => [e[0], editedLevel[e[0]]])),
+                    original: level,
+                    new150,
+                    move150below
+                  })
+                })
+                let json = await data.json()
                 mySwal.fire({
                   background: "#333333",
-                  titleText: `Success! (backend not implemented yet)`,
+                  titleText: `${data.ok ? "Success! (backend not implemented yet)" :json.message}`,
                   color: "white",
                   confirmButtonColor: 'black',
                 })
+                if(data.ok) {
                 setTimeout(() => {
                   setEditedLevel(level)
                 }, 0)
+              }
               } catch(_) { 
 
               }
