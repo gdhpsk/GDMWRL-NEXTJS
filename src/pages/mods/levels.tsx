@@ -227,12 +227,12 @@ export default function Settings() {
                     html: <>
                       <InputGroup>
                         <InputGroup.Text id="150name">Level Name</InputGroup.Text>
-                        <Form.Control aria-describedby="150name" placeholder="Level..." onChange={(e: any) => {
+                        <Form.Control aria-describedby="150name" placeholder="Level..." onChange={(e: any) =>{
                           setTimeout(() => {
                             let {value} = e.target
                           setNew150(value)
                           }, 0)
-                        }}></Form.Control>
+          }}></Form.Control>
                         <Button style={{float: "left"}} onClick={resolve}>Go</Button>
                       </InputGroup>
                     </>
@@ -253,7 +253,7 @@ export default function Settings() {
                     color: "white",
                     confirmButtonColor: 'black',
                     html: <>
-                        <h5>To recap, here are all the changes you made on the level &quot;{level.name}&quot; by {level.host}:</h5>
+                        <h5>To recap, here are all the changes you made on the level &quot;{level.name}&quot; by {level.host} (if new150 / move150below dont show up, repopup the modal with none of those args inputted):</h5>
                         <br></br>
                         {new150 ? <p>New #150 level: {new150}</p> : ""}
                         {move150below ? <p>Current #150 level below: {move150below}</p> : ""}
@@ -283,7 +283,8 @@ export default function Settings() {
                         </div>
                     </>
                   })
-                })
+                
+              })
                 let authToken = await auth.currentUser?.getIdToken()
                 let data = await fetch("/api/levels/edit", {
                   method: "PATCH",
