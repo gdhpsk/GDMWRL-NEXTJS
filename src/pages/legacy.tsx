@@ -2,6 +2,7 @@ import { models } from "mongoose"
 import {useState, useEffect} from "react"
 import { Container, Dropdown, DropdownButton } from "react-bootstrap"
 import Level from"../components/Level"
+import levels from "../../unrated.json"
 
 export default function Home() {
   let [pages, setPages] = useState(1)
@@ -42,15 +43,16 @@ export default function Home() {
         <h1 className="page-subtitle">(All Extreme Demons)</h1>
       </div>
     <Container>
+      <br></br>
     <Dropdown style={{"display": "grid", "placeItems": "center"}}>
         <Dropdown.Toggle variant="primary">
-          Page {page}/{pages+1}&nbsp;
+          {page < pages+1 ? <>Letters {levels.range[page-1].normal}&nbsp;</> : <>Past Rated Extremes</>}
         </Dropdown.Toggle>
         <Dropdown.Menu>
         {Array.from(new Array(pages).keys()).map(e => <Dropdown.Item key={e} onClick={() => {
           setPage(e+1)
         }}>
-            {e+1}
+            {levels.range[e].normal}
           </Dropdown.Item>)}
           <Dropdown.Item onClick={() => {
           setPage(pages+1)

@@ -14,5 +14,31 @@
       "Heaven and Hell",
       "(Old) Dolos",
       "(Old) Omicron"
+    ],
+    "range": [
+      {
+        "regex": "[a-bA-B0-9]",
+        "normal": "0 - B"
+      },
+      {
+        "regex": "[c-eC-E]",
+        "normal": "C - E"
+      },
+      {
+        "regex": "[f-kF-K]",
+        "normal": "F - K"
+      },
+      {
+        "regex": "[l-oL-O]",
+        "normal": "L - O"
+      },
+      {
+        "regex": "[p-sP-S]",
+        "normal": "P - S"
+      },
+      {
+        "regex": "[t-zT-Z]",
+        "normal": "T - Z"
+      }
     ]
   }

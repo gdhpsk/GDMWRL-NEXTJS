@@ -31,6 +31,7 @@ export default function Home() {
         <h1 className="page-subtitle">(Top 1 - Top 75)</h1>
       </div>
     <Container>
+      <br></br>
     <p style={{"textDecoration": "underline", "textAlign": "center"}} onClick={botFunction} className="white">To the bottom</p>
     <div>
     {array?.map((e: any)  => {
