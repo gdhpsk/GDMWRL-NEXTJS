@@ -3,6 +3,8 @@ import {authentication} from "../../../../firebase-admin"
 import levels from "schemas/levels";
 import { json } from "stream/consumers";
 import leaderboard from "schemas/leaderboard";
+import mongoose from "mongoose";
+import { ObjectID } from "bson";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -198,12 +200,239 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 }
             }
-  }], {upsert: true})
+  }])
   if(additional_info.new150) {
     additional_info.new150.position = 150
     await additional_info.new150.save()
   }
   }
+  if(req.body.changes.name) {
+    let names = level.list.map((e:any) => e.name)
+    await leaderboard.updateMany({name: {$in: names}}, [
+      {"$set": {
+        extralist: {
+          "$map": {
+            input: "$extralist",
+            as: "record",
+            in: {
+              "$switch": {
+                branches: [
+                  {case: {"$eq": ["$$record.name", level.name]}, then: {
+                    name: req.body.changes.name,
+                    percent: "$$record.percent",
+                    hertz: "$$record.hertz",
+                    verification: "$$record.verification",
+                    id: "$$record.id"
+                  }}
+                ],
+                default: "$$record"
+              }
+            }
+          }
+        },
+        records: {
+          "$map": {
+            input: "$records",
+            as: "record",
+            in: {
+              "$switch": {
+                branches: [
+                  {case: {"$eq": ["$$record.name", level.name]}, then: {
+                    name: req.body.changes.name,
+                    percent: "$$record.percent",
+                    hertz: "$$record.hertz",
+                    verification: "$$record.verification",
+                    id: "$$record.id"
+                  }}
+                ],
+                default: "$$record"
+              }
+            }
+          }
+        },
+        completions: {
+          "$map": {
+            input: "$completions",
+            as: "record",
+            in: {
+              "$switch": {
+                branches: [
+                  {case: {"$eq": ["$$record.name", level.name]}, then: {
+                    name: req.body.changes.name,
+                    percent: "$$record.percent",
+                    hertz: "$$record.hertz",
+                    verification: "$$record.verification",
+                    id: "$$record.id"
+                  }}
+                ],
+                default: "$$record"
+              }
+            }
+          }
+        },
+        screenshot: {
+          "$map": {
+            input: "$screenshot",
+            as: "record",
+            in: {
+              "$switch": {
+                branches: [
+                  {case: {"$eq": ["$$record.name", level.name]}, then: {
+                    name: req.body.changes.name,
+                    percent: "$$record.percent",
+                    hertz: "$$record.hertz",
+                    verification: "$$record.verification",
+                    id: "$$record.id"
+                  }}
+                ],
+                default: "$$record"
+              }
+            }
+          }
+        }
+      }}
+    ])
+  }
+if(req.body.changes.list) {
+  let replacements = {
+    names: level.list.map((e:any) => {
+      let eq = req.body.changes.list.find((x:any)=>x._id == e._id)
+      if(!eq) return undefined;
+      if(eq.name == e.name) return undefined;
+      return [e.name, eq.name, {
+        name: req.body.changes.name ?? level.name,
+        percent: eq.percent[0],
+        hertz: eq.hertz,
+        verification: eq.verification,
+        id: new ObjectID(eq._id)
+      }]
+    }).filter((e:any) => e),
+    other: level.list.map((e:any) => {
+      let eq = req.body.changes.list.find((x:any)=>x._id == e._id)
+      if(!eq) return undefined;
+      if(eq.percent[0] == e.percent[0] && eq.screenshot == e.screenshot && eq.hertz == e.hertz && eq.verification == e.verification) return undefined;
+      return [eq.name, {
+        name: req.body.changes.name ?? level.name,
+        percent: eq.percent[0],
+        hertz: eq.hertz,
+        verification: eq.verification,
+        id: new ObjectID(eq._id)
+      }]
+    }).filter((e:any) => e)
+  }
+  function classify(percent: number, screenshot: boolean, position: number) {
+    if(screenshot) return "screenshot"
+    if(position > 150) return "extralist"
+    if(percent < 100) return "records"
+    return "completions"
+  }
+  replacements.names.forEach(async (names:[string, string, any]) => {
+    await leaderboard.updateOne({name: names[0]}, [{
+      $set: {
+        records: {
+          $filter: {
+            input: "$records",
+            as: "record",
+            cond: {$ne: ["$$record.name", req.body.changes.name ?? level.name]}
+          }
+        },
+        completions: {
+          $filter: {
+            input: "$completions",
+            as: "record",
+            cond: {$ne: ["$$record.name", req.body.changes.name ?? level.name]}
+          }
+        },
+        extralist: {
+          $filter: {
+            input: "$extralist",
+            as: "record",
+            cond: {$ne: ["$$record.name", req.body.changes.name ?? level.name]}
+          }
+        },
+        screenshot: {
+          $filter: {
+            input: "$screenshot",
+            as: "record",
+            cond: {$ne: ["$$record.name", req.body.changes.name ?? level.name]}
+          }
+        }
+      }
+    }])
+    await leaderboard.updateOne({name: names[1]}, {
+      $push: {
+        [classify(names[2].percent, names[2].screenshot, req.body.changes.position ?? level.position)]: names[2]
+      }
+    }, {upsert: true})
+    let {records, completions, extralist, screenshot} = await leaderboard.findOne({name: names[0]}).select("records completions extralist screenshot")
+    if([...records, ...completions, ...extralist, ...screenshot].every((e:any) => e == "none")) {
+      await leaderboard.deleteOne({name: names[0]})
+    }
+
+  })
+  replacements.other.map(async (stuff: [string, any]) => {
+    await leaderboard.updateOne({name: stuff[0]}, [{
+      $set: {
+        records: {
+          $map: {
+            input: "$records",
+            as: "record",
+            in: {
+              $switch: {
+                branches: [
+                  {case: {$eq: ["$$record.id", stuff[1].id]}, then: stuff[1]}
+                ],
+                default: "$$record"
+              }
+            }
+          }
+        },
+        completions: {
+          $map: {
+            input: "$completions",
+            as: "record",
+            in: {
+              $switch: {
+                branches: [
+                  {case: {$eq: ["$$record.id", stuff[1].id]}, then: stuff[1]}
+                ],
+                default: "$$record"
+              }
+            }
+          }
+        },
+        extralist: {
+          $map: {
+            input: "$extralist",
+            as: "record",
+            in: {
+              $switch: {
+                branches: [
+                  {case: {$eq: ["$$record.id", stuff[1].id]}, then: stuff[1]}
+                ],
+                default: "$$record"
+              }
+            }
+          }
+        },
+        screenshot: {
+          $map: {
+            input: "$screenshot",
+            as: "record",
+            in: {
+              $switch: {
+                branches: [
+                  {case: {$eq: ["$$record.id", stuff[1].id]}, then: stuff[1]}
+                ],
+                default: "$$record"
+              }
+            }
+          }
+        }
+      }
+    }])
+  })
+}
   await levels.findByIdAndUpdate(level._id, {
     "$set": req.body.changes
   }) 

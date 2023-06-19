@@ -14,6 +14,7 @@ export default function Settings() {
     let [new150, setNew150] = useState("")
     let [move150below, setMove150Below] = useState("")
     let [editedLevel, setEditedLevel] = useState<any>(null)
+    let [goFetch, setGoFetch] = useState(true)
     let auth = getAuth()
     onAuthStateChanged(auth, (u) => {
       if(u) {
@@ -48,15 +49,16 @@ export default function Settings() {
     }
 
     useEffect(() => {
-      if(!perms) return;
+      if((!perms || levels.length) && !goFetch) return;
         changeIt();
         (async () => {
             let data = await fetch("/api/levels")
             let json = await data.json() 
             setLevels(json)
             setOriginalSet(json)
+            setGoFetch(false)
         })()
-    })
+    }, [goFetch])
 
     function objectEquals(x: any, y: any) {
       'use strict';
@@ -302,13 +304,14 @@ export default function Settings() {
                 let json = await data.json()
                 mySwal.fire({
                   background: "#333333",
-                  titleText: `${data.ok ? "Success! (backend not implemented yet)" :json.message}`,
+                  titleText: `${data.ok ? "Success!" :json.message}`,
                   color: "white",
                   confirmButtonColor: 'black',
                 })
                 if(data.ok) {
                 setTimeout(() => {
-                  setEditedLevel(level)
+                  setGoFetch(true)
+                  changeLevel(editedLevel)
                 }, 0)
               }
               } catch(_) { 
