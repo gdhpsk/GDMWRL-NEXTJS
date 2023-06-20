@@ -68,6 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }])
   level.list.forEach(async (record:any) => {
+    if(record.name == "") return;
       let {records, completions, extralist, screenshot} = await leaderboard.findOne({name: record.name}).select("records completions extralist screenshot")
       if([...records, ...completions, ...extralist, ...screenshot].every((e:any) => e == "none")) {
         await leaderboard.deleteOne({name: record.name})
