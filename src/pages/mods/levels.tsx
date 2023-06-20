@@ -286,7 +286,7 @@ export default function Settings() {
                     <h5>Please recheck all of your information! (if move150below dont show up, repopup the modal with none of those args inputted):</h5>
                     <br></br>
                     {move150below ? <p>Current #150 level below: {move150below}</p> : ""}
-                    {Object.entries(editedLevel).map(e => e[0] == "_id" ? "" : <p>{e[0]}: {e[1] as any}</p>)}
+                    {Object.entries(editedLevel).map(e => e[0] == "_id" ? "" : <p key={e[0]}>{e[0]}: {e[1] as any}</p>)}
                     <br></br>
                     <div>
                       <Button style={{float: "left"}} onClick={resolve}>Confirm</Button>
