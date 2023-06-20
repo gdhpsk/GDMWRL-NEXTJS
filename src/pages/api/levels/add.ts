@@ -37,10 +37,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         move150below: req.body.move150below
     })
   })
-  let json = await editPos.text()
-  console.log(json)
-//   if(!editPos.ok) {
-//     return res.status(editPos.status).json(json)
-//   }
+  let json = await editPos.json()
+  if(!editPos.ok) {
+    return res.status(editPos.status).json(json)
+  }
     res.status(200).json(level)
   }
