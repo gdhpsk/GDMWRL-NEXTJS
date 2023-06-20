@@ -13,6 +13,16 @@ export default function Settings() {
     let [levels, setLevels] = useState<any>([])
     let [editedLevel, setEditedLevel] = useState<any>(null)
     let [goFetch, setGoFetch] = useState(true)
+    let [newRecord, setNewRecord] = useState({
+      name: "",
+      percent: ["", ""],
+      listpercent: false,
+      screenshot: false,
+      verification: false,
+      deleted: false,
+      link: "",
+      hertz: 0
+    })
     let auth = getAuth()
     let info = {
       move150below: "",
@@ -250,7 +260,7 @@ export default function Settings() {
               }
             }, 0)
           }}>Back</Button>
-          {level._id == "yourmom" && Object.values(editedLevel).every(e => e) ? <div style={{display: "grid", placeItems: "center"}}>
+          {level._id == "yourmom" ? <div style={{display: "grid", placeItems: "center"}}>
             <Button style={{fontSize: "30px"}} onClick={async () => {
               try {
               if(editedLevel.position <= 150) {
@@ -329,9 +339,9 @@ export default function Settings() {
 
               }
 
-            }}>Add</Button>
+            }} disabled={!Object.values(editedLevel).every(e => e)}>Add</Button>
             </div> : ""}
-          {level._id != "yourmom" && !objectEquals(level, editedLevel)  ? <div style={{display: "grid", placeItems: "center"}}>
+          {level._id != "yourmom" ? <div style={{display: "grid", placeItems: "center"}}>
             <Button style={{fontSize: "30px"}} onClick={async () => {
               try {
                 if(level.position > 150 && editedLevel.position <= 150) {
@@ -454,7 +464,7 @@ export default function Settings() {
               } catch(_) { 
 
               }
-            }}>Save</Button>
+            }} disabled={objectEquals(level, editedLevel) }>Save</Button>
           </div> : ""}
           <br></br>
         <h1 style={{textAlign: "center"}} className="white">#<input placeholder="pos..."  type="number" style={{width: "4ch"}} defaultValue={level.position} onChange={(e:any) => {
@@ -501,6 +511,175 @@ export default function Settings() {
         {level?._id != "yourmom" ? <><br></br>
         <h1 style={{textAlign: "center"}} className="white">List:</h1>
         <br></br>
+        <div>
+          <div style={{display: "grid", placeItems: "center"}}><Button id="record-add" onClick={async () => {
+           try {
+            await new Promise((resolve, reject) => {
+              mySwal.fire({
+                background: "#333333",
+                titleText: `Confirm Record Addition?`,
+                color: "white",
+                confirmButtonColor: 'black',
+                html: <>
+                    <h5>Please recheck all of your information:</h5>
+                    <br></br>
+                    {Object.entries(newRecord).map(e => e[0] == "_id" ? "" : <p key={e[0]}>{e[0]}: {JSON.stringify(e[1] as any)}</p>)}
+                    <br></br>
+                    <div>
+                      <Button style={{float: "left"}} onClick={resolve}>Confirm</Button>
+                      <Button style={{backgroundColor: "red", float: "right"}} onClick={() => {
+                        mySwal.clickConfirm()
+                        reject()
+                      }}>Deny</Button>
+                    </div>
+                </>
+              })
+            
+          })
+          
+          let authToken = await auth.currentUser?.getIdToken()
+                let data = await fetch("/api/records/add", {
+                  method: "POST",
+                  headers: {
+                    'content-type': "application/json",
+                  },
+                  body: JSON.stringify({
+                    token: authToken,
+                    record: newRecord,
+                    name: level.name
+                  })
+                })
+                let json = await data.json()
+                mySwal.fire({
+                  background: "#333333",
+                  titleText: `${data.ok ? "Success!" :json.message}`,
+                  color: "white",
+                  confirmButtonColor: 'black',
+                })
+                if(data.ok) {
+                setTimeout(() => {
+                  setGoFetch(true)
+                  setEditedLevel(json)
+                  changeLevel(json)
+                  let elements = document.getElementsByClassName("record-adding")
+                  for(let i in elements) {
+                    if(isNaN(i as any)) return;
+                    let element = elements.item(parseInt(i))
+                    if(element?.tagName == "SELECT") {
+                      (element as any).value = "false"
+                    } else if(element?.tagName == "INPUT") {
+                      (element as any).value = ""
+                    }
+                  }
+                }, 0)
+              }
+           }  catch(_) {
+
+           }
+          }} disabled={!(newRecord.name && newRecord.link && newRecord.percent[0] && newRecord.hertz)} style={{fontSize: "20px"}}>Add</Button></div>
+          <br></br>
+            <h1 style={{textAlign: "center"}} className="white">Name: <input className="record-adding" style={{width: `${newRecord.name.length || 5}ch`}} placeholder="Name..." onChange={((e:any) => {
+             setTimeout(() => {
+              let {value} = e.target
+                        setNewRecord({
+                          ...newRecord,
+                          name: value
+                        })
+            }, 0)
+            })}/></h1>
+        <br></br>
+        <h1 style={{textAlign: "center"}} className="white">Main Record %: <input className="record-adding" style={{width: `4ch`}} placeholder="Main Record %..." type="number" onChange={((e:any) => {
+              setTimeout(() => {
+                let {value} = e.target
+                          setNewRecord({
+                            ...newRecord,
+                            percent: [value, newRecord.percent[1]]
+                          })
+              }, 0)
+            })}/></h1>
+          <br></br>
+        <h1 style={{textAlign: "center"}} className="white">Screenshot/Clip %: <input className="record-adding" style={{width: `4ch`}} type="number" placeholder="Screenshot/Clip %..." onChange={((e:any) => {
+              setTimeout(() => {
+                let {value} = e.target
+                          setNewRecord({
+                            ...newRecord,
+                            percent: [newRecord.percent[0], value]
+                          })
+              }, 0)
+            })}/></h1>
+        {level.position < 76 ? <><br></br><h1 style={{textAlign: "center"}} className="white">Listpercent: <select className="record-adding" defaultValue={"false"} onChange={(e) => {
+          setTimeout(() => {
+            let {value} = e.target
+                      setNewRecord({
+                        ...newRecord,
+                        listpercent: JSON.parse(value)
+                      })
+          }, 0)
+        }}>
+        <option value="true">true</option>          
+        <option value="false">false</option>          
+</select></h1></> : ""}
+<br></br>
+<h1 style={{textAlign: "center"}} className="white">Screenshot: <select className="record-adding" defaultValue={"false"} onChange={(e) => {
+           setTimeout(() => {
+            let {value} = e.target
+                      setNewRecord({
+                        ...newRecord,
+                        screenshot: JSON.parse(value)
+                      })
+          }, 0)
+        }}>
+        <option value="true">true</option>          
+        <option value="false">false</option>          
+</select></h1>
+<br></br>
+<h1 style={{textAlign: "center"}} className="white">Deleted: <select className="record-adding" defaultValue={"false"} onChange={(e) => {
+         setTimeout(() => {
+          let {value} = e.target
+                    setNewRecord({
+                      ...newRecord,
+                      deleted: JSON.parse(value)
+                    })
+        }, 0)
+        }}>
+        <option value="true">true</option>          
+        <option value="false">false</option>          
+</select></h1>
+<br></br>
+<h1 style={{textAlign: "center"}} className="white">Verification: <select className="record-adding" defaultValue={"false"} onChange={(e) => {
+          setTimeout(() => {
+            let {value} = e.target
+                      setNewRecord({
+                        ...newRecord,
+                        verification: JSON.parse(value)
+                      })
+          }, 0)
+        }}>
+        <option value="true">true</option>          
+        <option value="false">false</option>          
+</select></h1>
+<br></br>
+<h1 style={{textAlign: "center"}} className="white">Link: <input className="record-adding" style={{width: `${newRecord.link.length || 20}ch`}} onChange={(e:any) => {
+  setTimeout(() => {
+    let {value} = e.target
+              setNewRecord({
+                ...newRecord,
+                link: value
+              })
+  }, 0)
+        }}/></h1>
+        <br></br>
+        <h1 style={{textAlign: "center"}} className="white">Hertz: <input className="record-adding" style={{width: `4ch`}} type='number' onChange={(e:any) => {
+         setTimeout(() => {
+          let {value} = e.target
+                    setNewRecord({
+                      ...newRecord,
+                      hertz: parseInt(value)
+                    })
+        }, 0)
+        }}/></h1>
+        <br></br><br></br><br></br>
+          </div>
         {!level?.list.length || level.list[0].name == "" ? <h1 style={{textAlign: "center"}} className="white">No list records</h1> : level?.list?.map((e: any) => {
           let i = level.list.findIndex((x: any) => x._id == e._id)
          return <div key={e.link}>
