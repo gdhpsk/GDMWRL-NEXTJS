@@ -279,7 +279,7 @@ export default function Settings() {
             await new Promise((resolve, reject) => {
               mySwal.fire({
                 background: "#333333",
-                titleText: `Confirm Level Update?`,
+                titleText: `Confirm Level Addition?`,
                 color: "white",
                 confirmButtonColor: 'black',
                 html: <>
