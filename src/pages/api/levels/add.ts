@@ -13,6 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({message: "You cannot perform this action."})
   }
   let {level} = req.body
+  let exists = await levels.findOne({name: level.name})
+  if(exists) return res.status(400).json({message: "This level is already on the list!"})
   level._id = new mongoose.Types.ObjectId()
   level.list = [{
     name: "",
