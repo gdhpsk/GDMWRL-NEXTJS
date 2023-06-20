@@ -151,17 +151,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
         }
       ])
-  }
-
-        await levels.updateMany({position: {"$lte": Math.max(level.position, req.body.changes.position, (additional_info.move150below?.position ?? 0), (additional_info.new150?.positon ?? 0)), "$gte": Math.min(level.position, req.body.changes.position), "$ne": level.position}},[
+  } 
+        await levels.updateMany({position: {"$lte": Math.max(level.position, req.body.changes.position, (additional_info.move150below?.position ?? 0), (additional_info.new150?.position ?? 0)), "$gte": Math.min(level.position, req.body.changes.position), "$ne": level.position}},[
             {
             "$set": {
                 position: {
                     "$switch": {
                         branches: [
+                          {case: {"$eq": ["$position", additional_info.new150?.position ?? 0]}, then: 150},
                             {case: {"$and": [
                               {"$lt": ["$position", req.body.changes.position]},
-                              {"$gt": ["$position", additional_info.new150 ? level.position : Infinity]}
+                              {"$gt": ["$position", additional_info.new150 ? 150 : Infinity]}
                             ]}, then: "$position"},
                             {case: {"$and": [
                               {"$gt": ["$position", additional_info.new150?.position ?? Infinity]},
@@ -171,11 +171,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                               {"$lt": ["$position", additional_info.new150?.position ?? 0]},
                               {"$gte": ["$position", req.body.changes.position]}
                             ]}, then: {"$add": ["$position", 1]}},
-                            {case: {"$and": [
-                                {"$eq": ["$position", (additional_info.move150below?.position ?? -1)+1]},
-                                {"$gt": ["$position", 150]},
-                                {"$lt": ["$position", additional_info.move150below?.position ?? 0]}
-                            ]}, then: {"$add": ["$position", 1]}},
+                            {case: {$and: [
+                              {"$lte": ["$position", additional_info.move150below?.position ?? 0]},
+                              {"$gt": ["$position", level.position]}
+                            ]}, then: {"$subtract": ["$position", 1]}},
                             {case: {"$and": [
                                 {"$gt": ["$position", 150]},
                                 {"$lt": ["$position", additional_info.move150below?.position ?? 0]}
@@ -201,10 +200,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
             }
   }])
-  if(additional_info.new150) {
-    additional_info.new150.position = 150
-    await additional_info.new150.save()
-  }
   }
   if(req.body.changes.name) {
     let names = level.list.map((e:any) => e.name)
