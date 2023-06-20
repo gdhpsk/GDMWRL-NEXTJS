@@ -108,6 +108,62 @@ export default function Settings() {
           }, 0)
         }}></Form.Control>
        </InputGroup>
+       <hr/>
+       <div style={{display: "grid", placeItems: "center"}}>
+       <Button onClick={async () => {
+        if(level && !objectEquals(level, editedLevel)) {
+          await new Promise((resolve, reject) => {
+            mySwal.fire({
+              background: "#333333",
+              titleText: `Are you sure you want to disgard your changes?`,
+              color: "white",
+              confirmButtonColor: 'black',
+              html: <>
+                  <div>
+                  <Button style={{float: "right"}} onClick={() => {
+                      setTimeout(() => {
+                        mySwal.clickConfirm()
+                        reject()
+                      }, 0)
+                    }}>No</Button>
+                    <Button style={{backgroundColor: "red", float: "left"}} onClick={() => {
+                      setTimeout(() => {
+                        mySwal.clickConfirm()
+                        resolve(0)
+                      }, 0)
+                    }}>Yes</Button>
+                  </div>
+              </>
+            })
+        })
+      }
+        setTimeout(() => {
+
+          changeLevel(null)
+        setEditedLevel(null)
+        setTimeout(() => {
+          if(level?._id != "yourmom") {
+            changeLevel({
+              _id: "yourmom",
+              name: "",
+              host: "",
+              verifier: "",
+              ytcode: "",
+              position: null
+          })
+            setEditedLevel({
+              _id: "yourmom",
+               name: "",
+              host: "",
+              verifier: "",
+              ytcode: "",
+              position: null
+          })
+          }
+        }, 0)
+        }, 0)
+       }}>+ Add Level</Button>
+       </div>
         <hr/>
         {levels.map((e: any) => <div key={e.position} onClick={() => {setTimeout(async () => {
           try {
@@ -192,7 +248,89 @@ export default function Settings() {
               }
             }, 0)
           }}>Back</Button>
-          {!objectEquals(level, editedLevel) ? <div style={{display: "grid", placeItems: "center"}}>
+          {level._id == "yourmom" && Object.values(editedLevel).every(e => e) ? <div style={{display: "grid", placeItems: "center"}}>
+            <Button style={{fontSize: "30px"}} onClick={async () => {
+              try {
+              if(editedLevel.position <= 150) {
+                await new Promise((resolve, reject) => {
+                  mySwal.fire({
+                    background: "#333333",
+                    titleText: `Move 150 Level Below?`,
+                    color: "white",
+                    confirmButtonColor: 'black',
+                    html: <>
+                      <InputGroup>
+                        <InputGroup.Text id="150name">Level Name</InputGroup.Text>
+                        <Form.Control aria-describedby="150name" placeholder="Level..." id="name150" onChange={(e) => {
+                          setTimeout(() => {
+                            let {value} = e.target
+                          setMove150Below(value)
+                          }, 0)
+                        }}></Form.Control>
+                        <Button style={{float: "left"}} onClick={() => {
+                            resolve(0)
+                        }}>Go</Button>
+                      </InputGroup>
+                    </>
+                  })
+              }) 
+            }
+
+            await new Promise((resolve, reject) => {
+              mySwal.fire({
+                background: "#333333",
+                titleText: `Confirm Level Update?`,
+                color: "white",
+                confirmButtonColor: 'black',
+                html: <>
+                    <h5>Please recheck all of your information! (if move150below dont show up, repopup the modal with none of those args inputted):</h5>
+                    <br></br>
+                    {move150below ? <p>Current #150 level below: {move150below}</p> : ""}
+                    {Object.entries(editedLevel).map(e => e[0] == "_id" ? "" : <p>{e[0]}: {e[1] as any}</p>)}
+                    <br></br>
+                    <div>
+                      <Button style={{float: "left"}} onClick={resolve}>Confirm</Button>
+                      <Button style={{backgroundColor: "red", float: "right"}} onClick={() => {
+                        mySwal.clickConfirm()
+                        reject()
+                      }}>Deny</Button>
+                    </div>
+                </>
+              })
+            
+          })
+            let authToken = await auth.currentUser?.getIdToken()
+            let data = await fetch("/api/levels/add", {
+              method: "POST",
+              headers: {
+                'content-type': "application/json",
+              },
+              body: JSON.stringify({
+                token: authToken,
+                level: editedLevel,
+                move150below
+              })
+            })
+            let json = await data.json()
+            mySwal.fire({
+              background: "#333333",
+              titleText: `${data.ok ? "Success!" :json.message}`,
+              color: "white",
+              confirmButtonColor: 'black',
+            })
+            if(data.ok) {
+            setTimeout(() => {
+              setGoFetch(true)
+              changeLevel(json)
+            }, 0)
+          }
+              } catch(_) {
+
+              }
+
+            }}>Add</Button>
+            </div> : ""}
+          {level._id != "yourmom" && !objectEquals(level, editedLevel)  ? <div style={{display: "grid", placeItems: "center"}}>
             <Button style={{fontSize: "30px"}} onClick={async () => {
               try {
                 if(level.position > 150 && editedLevel.position <= 150) {
@@ -320,13 +458,13 @@ export default function Settings() {
             }}>Save</Button>
           </div> : ""}
           <br></br>
-        <h1 style={{textAlign: "center"}} className="white">#<input type="number" style={{width: "4ch"}} defaultValue={level.position} onChange={(e:any) => {
+        <h1 style={{textAlign: "center"}} className="white">#<input placeholder="pos..."  type="number" style={{width: "4ch"}} defaultValue={level.position} onChange={(e:any) => {
           setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.position = parseInt(e.target.value)
           setEditedLevel(newLevel)
           }, 0)
-        }}/>{editedLevel.position != level.position ? " *" : ""}: <input style={{width: `${editedLevel.name.length}ch`}} defaultValue={level.name} onChange={(e:any) => {
+        }}/>{editedLevel.position != level.position ? " *" : ""}: <input placeholder="Name..."  style={{width: `${editedLevel.name.length || 5}ch`}} defaultValue={level.name} onChange={(e:any) => {
           setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.name = e.target.value
@@ -334,7 +472,7 @@ export default function Settings() {
           }, 0)
         }}/> {editedLevel.name != level.name ? "*" : ""}</h1> 
         <br></br>
-        <h1 style={{textAlign: "center"}} className="white">Host: <input style={{width: `${editedLevel.host.length}ch`}} defaultValue={level.host} onChange={(e:any) => {
+        <h1 style={{textAlign: "center"}} className="white">Host: <input style={{width: `${editedLevel.host.length || 4}ch`}} defaultValue={level.host} onChange={(e:any) => {
             setTimeout(() => {
               let newLevel = structuredClone(editedLevel)
             newLevel.host = e.target.value
@@ -342,7 +480,7 @@ export default function Settings() {
             }, 0)
         }}/> {editedLevel.host != level.host ? "*" : ""}</h1> 
         <br></br>
-        <h1 style={{textAlign: "center"}} className="white">Verifier: <input style={{width: `${editedLevel.verifier.length}ch`}} defaultValue={level.verifier} onChange={(e:any) => {
+        <h1 style={{textAlign: "center"}} className="white">Verifier: <input style={{width: `${editedLevel.verifier.length || 8}ch`}} defaultValue={level.verifier} onChange={(e:any) => {
           setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.verifier = e.target.value
@@ -350,7 +488,7 @@ export default function Settings() {
           }, 0)
         }}/> {editedLevel.verifier != level.verifier ? "*" : ""}</h1> 
         <br></br>
-        <h1 style={{textAlign: "center"}} className="white">YT code: <input style={{width: `${editedLevel.ytcode.length}ch`}} defaultValue={level.ytcode} onChange={(e:any) => {
+        <h1 style={{textAlign: "center"}} className="white">YT code: <input style={{width: `${editedLevel.ytcode.length || 6}ch`}} defaultValue={level.ytcode} onChange={(e:any) => {
            setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.ytcode = e.target.value
@@ -361,7 +499,7 @@ export default function Settings() {
         <div style={{display: "grid", placeItems: "center"}}>
         <iframe width="560" height="315" src={`https://www.youtube-nocookie.com/embed/${editedLevel.ytcode}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
         </div>
-        <br></br>
+        {level?._id != "yourmom" ? <><br></br>
         <h1 style={{textAlign: "center"}} className="white">List:</h1>
         <br></br>
         {!level?.list.length || level.list[0].name == "" ? <h1 style={{textAlign: "center"}} className="white">No list records</h1> : level?.list?.map((e: any) => {
@@ -452,7 +590,9 @@ export default function Settings() {
         <br></br><br></br><br></br>
           </div>
         })}
+        </> : ""}
           </div> : <h1 style={{textAlign: "center"}} className="white">No content to display</h1>}
+          
       </div>
       </div>
     </>
