@@ -41,6 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   })
   let json = await editPos.json()
   if(!editPos.ok) {
+    await levels.findByIdAndDelete(newLevel._id)
     return res.status(editPos.status).json(json)
   }
     res.status(200).json(level)
