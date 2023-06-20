@@ -5,8 +5,10 @@ import { json } from "stream/consumers";
 import leaderboard from "schemas/leaderboard";
 import mongoose from "mongoose";
 import { ObjectID } from "bson";
+import webhook from "webhook";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if(req.method != "PATCH") return res.status(403).json({message: "Incorrect method."})
   try {
     let currentUser = await authentication.verifyIdToken(req.body.token as any)
     if(currentUser.role != "owner" && currentUser.role != "editor") throw new Error()
@@ -30,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if(req.body.changes.position >  150 && level.position <= 150) {
         let lev = await levels.findOne({name: req.body.new150 ?? ""})
-        if(!lev) return res.status(400).json({message: "Please input a valid level for the move 150 below field!"})
+        if(!lev) return res.status(400).json({message: "Please input a valid level for the new 150 field!"})
         if(lev.position <= 150) return res.status(400).send({message: "The new 150 field cannot be a top 150 level!"})
         additional_info.new150 = lev
     }
@@ -159,18 +161,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     "$switch": {
                         branches: [
                           {case: {"$eq": ["$position", additional_info.new150?.position ?? 0]}, then: 150},
+                          {case: {"$and": [
+                            {"$gt": ["$position", additional_info.new150?.position ?? Infinity]},
+                            {"$lte": ["$position", req.body.changes.position]}
+                          ]}, then: {"$subtract": ["$position", 1]}},
+                          {case: {"$and": [
+                            {"$lt": ["$position", additional_info.new150?.position ?? 0]},
+                            {"$gte": ["$position", req.body.changes.position]}
+                          ]}, then: {"$add": ["$position", 1]}},
                             {case: {"$and": [
                               {"$lt": ["$position", req.body.changes.position]},
                               {"$gt": ["$position", additional_info.new150 ? 150 : Infinity]}
                             ]}, then: "$position"},
-                            {case: {"$and": [
-                              {"$gt": ["$position", additional_info.new150?.position ?? Infinity]},
-                              {"$lte": ["$position", req.body.changes.position]}
-                            ]}, then: {"$subtract": ["$position", 1]}},
-                            {case: {"$and": [
-                              {"$lt": ["$position", additional_info.new150?.position ?? 0]},
-                              {"$gte": ["$position", req.body.changes.position]}
-                            ]}, then: {"$add": ["$position", 1]}},
                             {case: {$and: [
                               {"$lte": ["$position", additional_info.move150below?.position ?? 0]},
                               {"$gt": ["$position", level.position]}
@@ -431,5 +433,9 @@ if(req.body.changes.list) {
   await levels.findByIdAndUpdate(level._id, {
     "$set": req.body.changes
   }) 
+  await webhook(null, [{
+    title: "Level Edited",
+    description: `[${level.name}](https://youtube.com/watch?v=${level.ytcode}) by ${level.host} (verifier: ${level.verifier}) has just been edited! Here is the info that was edited:\n\n${Object.entries(req.body.changes).map(e => e[0] != "list" ? `${e[0]}: ${level[e[0]]} => ${e[1]}` : "list: Check the site ngl.").join("\n")}`
+  }])
     res.status(200).json({})
   }

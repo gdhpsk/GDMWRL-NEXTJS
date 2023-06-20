@@ -333,6 +333,7 @@ export default function Settings() {
             setTimeout(() => {
               setGoFetch(true)
               changeLevel(json)
+              setEditedLevel(json)
             }, 0)
           }
               } catch(_) {
@@ -342,6 +343,79 @@ export default function Settings() {
             }} disabled={!Object.values(editedLevel).every(e => e)}>Add</Button>
             </div> : ""}
           {level._id != "yourmom" ? <div style={{display: "grid", placeItems: "center"}}>
+          <Button style={{fontSize: "50px", backgroundColor: "red"}} onClick={async () => {
+            if(level.position <= 150) {
+              await new Promise((resolve, reject) => {
+                mySwal.fire({
+                  background: "#333333",
+                  titleText: `New 150 Level?`,
+                  color: "white",
+                  confirmButtonColor: 'black',
+                  html: <>
+                    <InputGroup>
+                      <InputGroup.Text id="150name">Level Name</InputGroup.Text>
+                      <Form.Control aria-describedby="150name" placeholder="Level..." onChange={(e: any) =>{
+                          let {value} = e.target
+                        info.new150 = value
+        }}></Form.Control>
+                      <Button style={{float: "left"}} onClick={resolve}>Go</Button>
+                    </InputGroup>
+                  </>
+                })
+            }) 
+            }
+            await new Promise((resolve, reject) => {
+              mySwal.fire({
+                background: "#333333",
+                titleText: `Confirm Level Deletion?`,
+                color: "white",
+                confirmButtonColor: 'black',
+                html: <>
+                    <h5>You are deleting the level {level.name} by &quot;{level.host}&quot;</h5>
+                    <br></br>
+                    {info.new150 ? <p>New #150 Level: {info.new150}</p> : ""}
+                    <br></br>
+                    <div>
+                      <Button style={{float: "left"}} onClick={resolve}>Confirm</Button>
+                      <Button style={{backgroundColor: "red", float: "right"}} onClick={() => {
+                        mySwal.clickConfirm()
+                        reject()
+                      }}>Deny</Button>
+                    </div>
+                </>
+              })
+            
+          })
+
+          let authToken = await auth.currentUser?.getIdToken()
+            let data = await fetch("/api/levels/delete", {
+              method: "DELETE",
+              headers: {
+                'content-type': "application/json",
+              },
+              body: JSON.stringify({
+                token: authToken,
+                level,
+                new150: info.new150
+              })
+            })
+            let json = await data.json()
+            mySwal.fire({
+              background: "#333333",
+              titleText: `${data.ok ? "Success!" :json.message}`,
+              color: "white",
+              confirmButtonColor: 'black',
+            })
+            if(data.ok) {
+              info.new150 = ""
+            setTimeout(() => {
+              setGoFetch(true)
+              changeLevel(null)
+              setEditedLevel(null)
+            }, 0)
+          }
+          }} disabled={!objectEquals(level, editedLevel)}>Delete</Button>
+          <br></br>
             <Button style={{fontSize: "30px"}} onClick={async () => {
               try {
                 if(level.position > 150 && editedLevel.position <= 150) {
@@ -561,6 +635,16 @@ export default function Settings() {
                   setGoFetch(true)
                   setEditedLevel(json)
                   changeLevel(json)
+                  setNewRecord({
+                    name: "",
+                    percent: ["", ""],
+                    listpercent: false,
+                    screenshot: false,
+                    verification: false,
+                    deleted: false,
+                    link: "",
+                    hertz: 0
+                  })
                   let elements = document.getElementsByClassName("record-adding")
                   for(let i in elements) {
                     if(isNaN(i as any)) return;
@@ -576,7 +660,7 @@ export default function Settings() {
            }  catch(_) {
 
            }
-          }} disabled={!(newRecord.name && newRecord.link && newRecord.percent[0] && newRecord.hertz)} style={{fontSize: "20px"}}>Add</Button></div>
+          }} disabled={!(objectEquals(level, editedLevel) && newRecord.name && newRecord.link && newRecord.percent[0] && newRecord.hertz)} style={{fontSize: "20px"}}>Add</Button></div>
           <br></br>
             <h1 style={{textAlign: "center"}} className="white">Name: <input className="record-adding" style={{width: `${newRecord.name.length || 5}ch`}} placeholder="Name..." onChange={((e:any) => {
              setTimeout(() => {
@@ -683,6 +767,63 @@ export default function Settings() {
         {!level?.list.length || level.list[0].name == "" ? <h1 style={{textAlign: "center"}} className="white">No list records</h1> : level?.list?.map((e: any) => {
           let i = level.list.findIndex((x: any) => x._id == e._id)
          return <div key={e.link}>
+          <div style={{display: "grid", placeItems: "center"}}><Button style={{backgroundColor: "red", fontSize: "20px"}} onClick={async () => {
+               try {
+                await new Promise((resolve, reject) => {
+                  mySwal.fire({
+                    background: "#333333",
+                    titleText: `Confirm Record Deletion?`,
+                    color: "white",
+                    confirmButtonColor: 'black',
+                    html: <>
+                        <h5>You are deleting a record on the level &quot;{level.name}&quot; by {level.host}. Info:</h5>
+                        <br></br>
+                        {Object.entries(e).map(e => e[0] == "_id" ? "" : <p key={e[0]}>{e[0]}: {JSON.stringify(e[1] as any)}</p>)}
+                        <br></br>
+                        <div>
+                          <Button style={{float: "left"}} onClick={resolve}>Confirm</Button>
+                          <Button style={{backgroundColor: "red", float: "right"}} onClick={() => {
+                            mySwal.clickConfirm()
+                            reject()
+                          }}>Deny</Button>
+                        </div>
+                    </>
+                  })
+                
+              })
+
+              let authToken = await auth.currentUser?.getIdToken()
+              let data = await fetch("/api/records/delete", {
+                method: "DELETE",
+                headers: {
+                  'content-type': "application/json",
+                },
+                body: JSON.stringify({
+                  token: authToken,
+                  record: e,
+                  level
+                })
+              })
+              let json = await data.json()
+              mySwal.fire({
+                background: "#333333",
+                titleText: `${data.ok ? "Success!" :json.message}`,
+                color: "white",
+                confirmButtonColor: 'black',
+              })
+              if(data.ok) {
+              setTimeout(() => {
+                setGoFetch(true)
+                setEditedLevel(json)
+                changeLevel(json)
+              }, 0)
+            }
+            } catch(_) {
+
+            }
+          }} disabled={!objectEquals(level, editedLevel)}>Delete</Button>
+          </div>
+          <br></br>
             <h1 style={{textAlign: "center"}} className="white">Name: <input style={{width: `${editedLevel.list[i].name.length}ch`}} defaultValue={level.list[i].name} onChange={(e:any) => {
            setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
