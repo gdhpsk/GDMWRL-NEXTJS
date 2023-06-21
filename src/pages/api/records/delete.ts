@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   await levels.updateOne({name: level.name}, {
     $pull: {
         list: {
-            _id: record._id
+            _id: new ObjectId(record._id)
         }
     }
   })

@@ -49,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let between = await levels.find({position: {$in: [level.position-1, level.position+1]}}).sort({position:1})
   await webhook(null, [{
     title: "New Level Addition",
-    description: `[${newLevel.name}](https://youtube.com/watch?v=${newLevel.ytcode}) by ${newLevel.host} (verifier: ${newLevel.verifier}) has just been placed at #${level.position}, above ${between[1].name} and below ${between[0].name}!`
+    description: `[${newLevel.name}](https://youtube.com/watch?v=${newLevel.ytcode}) by ${newLevel.host} (verifier: ${newLevel.verifier}) has just been placed at #${level.position}, above ${between[1]?.name} and below ${between[0].name}!`
   }])
     res.status(200).json(level)
   }
