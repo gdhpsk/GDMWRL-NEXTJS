@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await levels.updateOne({name: level.name}, [
         {
             $set: {
-                list: {
+                list: [{
                     name: "",
                     percent: ["", ""],
                     listpercent: false,
@@ -45,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     link: "",
                     hertz: 60,
                     _id: new mongoose.Types.ObjectId()
-                  }
+                  }]
             }
         }
     ])

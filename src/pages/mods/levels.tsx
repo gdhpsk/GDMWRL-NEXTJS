@@ -621,7 +621,7 @@ export default function Settings() {
                   body: JSON.stringify({
                     token: authToken,
                     record: newRecord,
-                    name: level.name
+                    level
                   })
                 })
                 let json = await data.json()
