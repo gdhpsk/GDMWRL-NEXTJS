@@ -25,7 +25,6 @@ export default function Home() {
           points -= completions
           points += extralist_prog
           points += screenshot
-          console.log(points)
             return points
         } else {
             return points - (minus || 0)

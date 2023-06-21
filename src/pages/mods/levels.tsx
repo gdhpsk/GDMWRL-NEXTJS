@@ -43,7 +43,7 @@ export default function Settings() {
     })
     function changeIt() {
       try {
-        if(window.innerWidth <= 1000) {
+        if(window.innerWidth <= 1200) {
           if(level) {
             (document.getElementById(styles.show) as any).style.display = "grid";
             (document.getElementById(styles.list) as any).style.display = "none"
