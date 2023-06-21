@@ -61,8 +61,8 @@ export default function Settings() {
     }
 
     useEffect(() => {
+      changeIt();
       if((!perms || levels.length) && !goFetch) return;
-        changeIt();
         (async () => {
             let data = await fetch("/api/levels")
             let json = await data.json() 
