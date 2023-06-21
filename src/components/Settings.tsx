@@ -26,6 +26,12 @@ const Auth: React.FC = () => {
         <br></br>
         <h6 style={{textAlign: "center"}}>User Type: {type}</h6>
         <br></br>
+        {["editor", "owner"].includes(type) ? <>
+        <h6 style={{textAlign: "center"}}>Mod Settings: <a href="/mods/settings">settings</a></h6>
+        <h6 style={{textAlign: "center"}}>Mod Level Editing: <a href="/mods/levels">level editing</a></h6>
+        <h6 style={{textAlign: "center"}}>Mod Leaderboard Editing: <a href="/mods/leaderboards">leaderboard editing</a></h6>
+        </> : ""}
+        <br></br>
             <div style={{display: "grid", placeItems: "center"}}>
                 <Button color="red" onClick={async () => {
                    await signOut(auth)
@@ -121,7 +127,7 @@ const Auth: React.FC = () => {
         </>
     })
 }
-    return <Nav.Link onClick={display} style={{color: "white"}}>Settings</Nav.Link>
+    return <Nav.Link onClick={display} style={{color: "white"}}>{["editor", "owner"].includes(type) ? "Mod Links/" : ""}Settings</Nav.Link>
 }
 
 export default Auth
