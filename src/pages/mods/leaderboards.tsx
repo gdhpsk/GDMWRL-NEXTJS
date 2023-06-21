@@ -292,11 +292,11 @@ export default function Settings() {
                                   {changed.map(e => {
                                     if(e[0] == "socials") {
                                         if(Object.values((e[1] as any)[0]).every(e => !e)) {
-                                            return <p>socials {"=>"} undefined</p>
+                                            return <p key={e[0]}>socials {"=>"} undefined</p>
                                         }
-                                        return Object.entries((e[1] as any)[0]).filter(x => x[1]).map(x => <p>socials.{x[0]}: {profile[e[0]]?.[0]?.[x[0]] as any || "undefined"} {"=>"} {x[1] as any}</p>)
+                                        return Object.entries((e[1] as any)[0]).filter(x => x[1]).map(x => <p key={x[0]}>socials.{x[0]}: {profile[e[0]]?.[0]?.[x[0]] as any || "undefined"} {"=>"} {x[1] as any}</p>)
                                     } else {
-                                        return <p>{e[0]}: {profile[e[0]] || "undefined"} {"=>"} {e[1] as any}</p>
+                                        return <p key={e[0]}>{e[0]}: {profile[e[0]] || "undefined"} {"=>"} {e[1] as any}</p>
                                     }
                                   })}
                                     <Button style={{float: "left"}} onClick={resolve}>Confirm</Button>

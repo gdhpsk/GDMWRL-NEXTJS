@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 import styles from "@/styles/Leaderboard.module.css"
 import withReactContent from 'sweetalert2-react-content'
 import { createUserWithEmailAndPassword, deleteUser, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateCurrentUser, updateProfile, verifyBeforeUpdateEmail } from 'firebase/auth'
+import Link from 'next/link'
 
 const Auth: React.FC = () => {
     const mySwal = withReactContent(Swal);
@@ -27,9 +28,9 @@ const Auth: React.FC = () => {
         <h6 style={{textAlign: "center"}}>User Type: {type}</h6>
         <br></br>
         {["editor", "owner"].includes(type) ? <>
-        <h6 style={{textAlign: "center"}}>Mod Settings: <a href="/mods/settings">settings</a></h6>
-        <h6 style={{textAlign: "center"}}>Mod Level Editing: <a href="/mods/levels">level editing</a></h6>
-        <h6 style={{textAlign: "center"}}>Mod Leaderboard Editing: <a href="/mods/leaderboards">leaderboard editing</a></h6>
+        <h6 style={{textAlign: "center"}}>Mod Settings: <Link href="/mods/settings">settings</Link></h6>
+        <h6 style={{textAlign: "center"}}>Mod Level Editing: <Link href="/mods/levels">level editing</Link></h6>
+        <h6 style={{textAlign: "center"}}>Mod Leaderboard Editing: <Link href="/mods/leaderboards">leaderboard editing</Link></h6>
         </> : ""}
         <br></br>
             <div style={{display: "grid", placeItems: "center"}}>
