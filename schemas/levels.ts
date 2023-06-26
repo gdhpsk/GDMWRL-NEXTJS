@@ -1,6 +1,6 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose"
 
-var records = new mongoose.Schema({
+var records = new mongoose.Schema<any>({
     name: {
         type: String,
         required: false
@@ -8,7 +8,7 @@ var records = new mongoose.Schema({
     percent: {
        type: [String],
        validate: {
-           validator: v => v.length == 2,
+           validator: (v:any) => v.length == 2,
            message: () => console.log("Please only add 2 values for the percentage!")
        },
        required: true
@@ -54,4 +54,4 @@ var levelsSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.models.levels || mongoose.model("levels", levelsSchema)
+export default mongoose.models.levels || mongoose.model("levels", levelsSchema)

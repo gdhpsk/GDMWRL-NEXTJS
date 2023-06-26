@@ -1,6 +1,6 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose"
 
-var leaderboard = new mongoose.Schema({
+var leaderboard = new mongoose.Schema<any>({
     nationality: String,
     minus: Number,
     socials: mongoose.SchemaTypes.Mixed,
@@ -20,4 +20,4 @@ var leaderboard = new mongoose.Schema({
     name: String
 })
 
-module.exports = mongoose.models.leaderboard || mongoose.model("leaderboard", leaderboard)
+export default mongoose.models.leaderboard || mongoose.model("leaderboard", leaderboard)

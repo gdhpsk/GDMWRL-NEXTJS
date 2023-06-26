@@ -19,6 +19,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "schemas/levels.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "schemas/levels.ts"],
   "exclude": ["node_modules"]
 }
