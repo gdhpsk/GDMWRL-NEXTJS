@@ -364,7 +364,7 @@ if(req.body.changes.list) {
         hertz: eq.hertz,
         verification: eq.verification,
         id: new ObjectID(eq._id)
-      }]
+      }, eq.screenshot]
     }).filter((e:any) => e)
   }
   function classify(percent: number, screenshot: boolean, position: number) {
@@ -392,64 +392,99 @@ if(req.body.changes.list) {
     }
 
   })
-  replacements.other.map(async (stuff: [string, any]) => {
+  replacements.other.map(async (stuff: [string, any, boolean]) => {
     await leaderboard.updateOne({name: stuff[0]}, [{
       $set: {
         records: {
-          $map: {
-            input: "$records",
-            as: "record",
-            in: {
+          $concatArrays: [
+            {$filter: {
+              input: "$records",
+              as: "record",
+              cond: {$and: [
+                {$ne: ["$$record.id", stuff[1].id]},
+                {$ne: ["$$record", "none"]}
+              ]}
+            }},
+            {
               $switch: {
                 branches: [
-                  {case: {$eq: ["$$record.id", stuff[1].id]}, then: stuff[1]}
+                  {case: {$and: [
+                    {$lte: [level.position, 150]},
+                    {$lt: [{$toInt: stuff[1].percent}, 100]},
+                    {$ne: [stuff[2], true]}
+                  ]}, then: [stuff[1]]}
                 ],
-                default: "$$record"
+                default: []
               }
             }
-          }
+        ]
         },
         completions: {
-          $map: {
-            input: "$completions",
-            as: "record",
-            in: {
+          $concatArrays: [
+            {$filter: {
+              input: "$completions",
+              as: "record",
+              cond: {$and: [
+                {$ne: ["$$record.id", stuff[1].id]},
+                {$ne: ["$$record", "none"]}
+              ]}
+            }},
+            {
               $switch: {
                 branches: [
-                  {case: {$eq: ["$$record.id", stuff[1].id]}, then: stuff[1]}
+                  {case: {$and: [
+                    {$lte: [level.position, 150]},
+                    {$eq: [{$toInt: stuff[1].percent}, 100]},
+                    {$ne: [stuff[2], true]}
+                  ]}, then: [stuff[1]]}
                 ],
-                default: "$$record"
+                default: []
               }
             }
-          }
+        ]
         },
         extralist: {
-          $map: {
-            input: "$extralist",
-            as: "record",
-            in: {
+          $concatArrays: [
+            {$filter: {
+              input: "$extralist",
+              as: "record",
+              cond: {$and: [
+                {$ne: ["$$record.id", stuff[1].id]},
+                {$ne: ["$$record", "none"]}
+              ]}
+            }},
+            {
               $switch: {
                 branches: [
-                  {case: {$eq: ["$$record.id", stuff[1].id]}, then: stuff[1]}
+                  {case: {$and: [
+                    {$gte: [level.position, 150]},
+                    {$ne: [stuff[2], true]}
+                  ]}, then: [stuff[1]]}
                 ],
-                default: "$$record"
+                default: []
               }
             }
-          }
+        ]
         },
         screenshot: {
-          $map: {
-            input: "$screenshot",
-            as: "record",
-            in: {
-              $switch: {
-                branches: [
-                  {case: {$eq: ["$$record.id", stuff[1].id]}, then: stuff[1]}
-                ],
-                default: "$$record"
+          $concatArrays: [
+              {$filter: {
+                input: "$screenshot",
+                as: "record",
+                cond: {$and: [
+                  {$ne: ["$$record.id", stuff[1].id]},
+                  {$ne: ["$$record", "none"]}
+                ]}
+              }},
+              {
+                $switch: {
+                  branches: [
+                    {case: {$eq: [stuff[2], true]}, then: [stuff[1]]}
+                  ],
+                  default: []
+                }
               }
-            }
-          }
+          ]
         }
       }
     }])
