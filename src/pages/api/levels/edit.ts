@@ -27,6 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         let lev = await levels.findById(req.body.move150below ?? "")
         if(!lev) throw new Error()
+        if(lev._id.toString() == level._id.toString()) return res.status(400).send({message: "The move 150 below field cannot be the level you are moving!"})
         if(lev.position <= 150) return res.status(400).send({message: "The move 150 below field cannot be a top 150 level!"})
         additional_info.move150below = lev
       } catch(_) {
@@ -36,8 +37,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if(req.body.changes.position >  150 && level.position <= 150) {
       try {
-        let lev = await levels.findOne({name: req.body.new150 ?? ""})
+        let lev = await levels.findById(req.body.new150 ?? "")
         if(!lev) throw new Error()
+        if(lev._id.toString() == level._id.toString()) return res.status(400).send({message: "The new 150 field cannot be the level you are moving!"})
         if(lev.position <= 150) return res.status(400).send({message: "The new 150 field cannot be a top 150 level!"})
         additional_info.new150 = lev
       } catch(_) {
