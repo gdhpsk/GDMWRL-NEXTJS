@@ -4,7 +4,7 @@ import levels from "schemas/levels";
 import { json } from "stream/consumers";
 import leaderboard from "schemas/leaderboard";
 import mongoose from "mongoose";
-import { ObjectId } from "bson";
+import { ObjectID, ObjectId } from "bson";
 import webhook from "webhook";
 
 function classify(percent: number, screenshot: boolean, position: number) {
@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   let {level, record} = req.body
   if(level.list.length > 1) { 
-  await levels.updateOne({name: level.name}, {
+  await levels.updateOne({_id: new ObjectID(level._id)}, {
     $pull: {
         list: {
             _id: new ObjectId(record._id)
@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   })
 } else {
-    await levels.updateOne({name: level.name}, [
+    await levels.updateOne({_id: new ObjectID(level._id)}, [
         {
             $set: {
                 list: [{

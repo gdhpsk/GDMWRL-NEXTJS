@@ -2,7 +2,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { useEffect, useState } from "react"
 import ErrorPage from "../404"
 import styles from "../../styles/levels.module.css"
-import { Button, Form, InputGroup } from "react-bootstrap"
+import { Button, Form, FormSelect, InputGroup } from "react-bootstrap"
 import withReactContent from "sweetalert2-react-content"
 import Swal from "sweetalert2"
 
@@ -25,8 +25,14 @@ export default function Settings() {
     })
     let auth = getAuth()
     let info = {
-      move150below: "",
-      new150: ""
+      move150below: {
+        name: "",
+        id: ""
+      },
+      new150: {
+        name: "",
+        id: ""
+      }
     }
     onAuthStateChanged(auth, (u) => {
       if(u) {
@@ -274,10 +280,16 @@ export default function Settings() {
                     html: <>
                       <InputGroup>
                         <InputGroup.Text id="150name">Level Name</InputGroup.Text>
-                        <Form.Control aria-describedby="150name" placeholder="Level..." id="name150" onChange={(e) => {
-                            let {value} = e.target
-                            info.move150below = value
-                        }}></Form.Control>
+                        <Form.Select aria-describedby="150name" id="name150" onChange={(e) => {
+                              let {value} = e.target
+                            info.move150below = {
+                              name: value.split(" @ ")[1],
+                              id: value.split(" @ ")[0]
+                            }
+                          }}>
+                            <option>Select a Level</option>
+                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
+                          </Form.Select>
                         <Button style={{float: "left"}} onClick={() => {
                             resolve(0)
                         }}>Go</Button>
@@ -296,7 +308,7 @@ export default function Settings() {
                 html: <>
                     <h5>Please recheck all of your information:</h5>
                     <br></br>
-                    {info.move150below ? <p>Current #150 level below: {info.move150below}</p> : ""}
+                    {info.move150below ? <p>Current #150 level below: {info.move150below.name}</p> : ""}
                     {Object.entries(editedLevel).map(e => e[0] == "_id" ? "" : <p key={e[0]}>{e[0]}: {e[1] as any}</p>)}
                     <br></br>
                     <div>
@@ -319,7 +331,7 @@ export default function Settings() {
               body: JSON.stringify({
                 token: authToken,
                 level: editedLevel,
-                move150below: info.move150below
+                move150below: info.move150below.id
               })
             })
             let json = await data.json()
@@ -330,7 +342,10 @@ export default function Settings() {
               confirmButtonColor: 'black',
             })
             if(data.ok) {
-              info.move150below = ""
+              info.move150below = {
+                name: "",
+                id: ""
+              }
             setTimeout(() => {
               setGoFetch(true)
               changeLevel(json)
@@ -355,10 +370,16 @@ export default function Settings() {
                   html: <>
                     <InputGroup>
                       <InputGroup.Text id="150name">Level Name</InputGroup.Text>
-                      <Form.Control aria-describedby="150name" placeholder="Level..." onChange={(e: any) =>{
-                          let {value} = e.target
-                        info.new150 = value
-        }}></Form.Control>
+                      <Form.Select aria-describedby="150name" id="name150" onChange={(e) => {
+                              let {value} = e.target
+                            info.new150 = {
+                              name: value.split(" @ ")[1],
+                              id: value.split(" @ ")[0]
+                            }
+                          }}>
+                            <option>Select a Level</option>
+                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
+                          </Form.Select>
                       <Button style={{float: "left"}} onClick={resolve}>Go</Button>
                     </InputGroup>
                   </>
@@ -374,7 +395,7 @@ export default function Settings() {
                 html: <>
                     <h5>You are deleting the level {level.name} by &quot;{level.host}&quot;</h5>
                     <br></br>
-                    {info.new150 ? <p>New #150 Level: {info.new150}</p> : ""}
+                    {info.new150 ? <p>New #150 Level: {info.new150.name}</p> : ""}
                     <br></br>
                     <div>
                       <Button style={{float: "left"}} onClick={resolve}>Confirm</Button>
@@ -397,7 +418,7 @@ export default function Settings() {
               body: JSON.stringify({
                 token: authToken,
                 level,
-                new150: info.new150
+                new150: info.new150.id
               })
             })
             let json = await data.json()
@@ -408,7 +429,10 @@ export default function Settings() {
               confirmButtonColor: 'black',
             })
             if(data.ok) {
-              info.new150 = ""
+              info.new150 = {
+                name: "",
+                id: ""
+              }
             setTimeout(() => {
               setGoFetch(true)
               changeLevel(null)
@@ -429,10 +453,16 @@ export default function Settings() {
                       html: <>
                         <InputGroup>
                           <InputGroup.Text id="150name">Level Name</InputGroup.Text>
-                          <Form.Control aria-describedby="150name" placeholder="Level..." id="name150" onChange={(e) => {
+                          <Form.Select aria-describedby="150name" id="name150" onChange={(e) => {
                               let {value} = e.target
-                            info.move150below = value
-                          }}></Form.Control>
+                            info.move150below = {
+                              name: value.split(" @ ")[1],
+                              id: value.split(" @ ")[0]
+                            }
+                          }}>
+                            <option>Select a Level</option>
+                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
+                          </Form.Select>
                           <Button style={{float: "left"}} onClick={() => {
                               resolve(0)
                           }}>Go</Button>
@@ -451,10 +481,16 @@ export default function Settings() {
                     html: <>
                       <InputGroup>
                         <InputGroup.Text id="150name">Level Name</InputGroup.Text>
-                        <Form.Control aria-describedby="150name" placeholder="Level..." onChange={(e: any) =>{
-                            let {value} = e.target
-                          info.new150 = value
-          }}></Form.Control>
+                        <Form.Select aria-describedby="150name" id="name150" onChange={(e) => {
+                              let {value} = e.target
+                            info.new150 = {
+                              name: value.split(" @ ")[1],
+                              id: value.split(" @ ")[0]
+                            }
+                          }}>
+                            <option>Select a Level</option>
+                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
+                          </Form.Select>
                         <Button style={{float: "left"}} onClick={resolve}>Go</Button>
                       </InputGroup>
                     </>
@@ -477,8 +513,8 @@ export default function Settings() {
                     html: <>
                         <h5>To recap, here are all the changes you made on the level &quot;{level.name}&quot; by {level.host}:</h5>
                         <br></br>
-                        {info.new150 ? <p>New #150 level: {info.new150}</p> : ""}
-                        {info.move150below ? <p>Current #150 level below: {info.move150below}</p> : ""}
+                        {info.new150 ? <p>New #150 level: {info.new150.name}</p> : ""}
+                        {info.move150below ? <p>Current #150 level below: {info.move150below.name}</p> : ""}
                         {changed.map((e: any) => {
                           if(e[0] != "list") {
                             return <p key={e[0]}>{e[0]}: {e[1]} {"=>"} {editedLevel[e[0]]}</p>
@@ -517,8 +553,8 @@ export default function Settings() {
                     token: authToken,
                     changes: Object.fromEntries(changed.map((e: any) => [e[0], editedLevel[e[0]]])),
                     original: level,
-                    new150: info.new150,
-                    move150below: info.move150below
+                    new150: info.new150.id,
+                    move150below: info.move150below.id
                   })
                 })
                 let json = await data.json()
@@ -529,8 +565,14 @@ export default function Settings() {
                   confirmButtonColor: 'black',
                 })
                 if(data.ok) {
-                  info.move150below = ""
-                  info.new150 = ""
+                  info.move150below = {
+                    name: "",
+                    id: ""
+                  }
+                  info.new150 = {
+                    name: "",
+                    id: ""
+                  }
                 setTimeout(() => {
                   setGoFetch(true)
                   changeLevel(editedLevel)

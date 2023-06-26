@@ -20,7 +20,7 @@ interface LeaderboardProps {
 const Level: React.FC<LeaderboardProps> = ({ name, socials, nationality, points, levels, bywrs, records, completions, extralist, screenshot }: LeaderboardProps) => {
     function display() {
         let generateHTML = (list: Array<any>) => {
-            list.sort((a: any, b: any) => a.name.localeCompare(b.name))
+            list.sort((a: any, b: any) => a?.name?.localeCompare(b?.name))
             list.sort((a: any, b: any) => levels?.find((j: any) => j.name == a.name)?.position ?? (1+levels.length) - levels.find((j: any) => j.name == b.name)?.position ??  (1+levels.length))
             if(list[0] == "none" || !list.length) {
                 return <p className='white' style={{textAlign: "center"}}>none</p>

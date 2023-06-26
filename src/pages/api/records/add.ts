@@ -5,6 +5,7 @@ import { json } from "stream/consumers";
 import leaderboard from "schemas/leaderboard";
 import mongoose from "mongoose";
 import webhook from "webhook";
+import { ObjectID } from "bson";
 
 function classify(percent: number, screenshot: boolean, position: number) {
     if(screenshot) return "screenshot"
@@ -24,13 +25,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let {level, record} = req.body
   record._id = new mongoose.Types.ObjectId()
   if(level.list[0]?.name) { 
-    await levels.updateOne({name: level.name}, {
+    await levels.updateOne({_id: new ObjectID(level._id)}, {
       $push: {
           list: record
       }
     })
   } else {
-      await levels.updateOne({name: level.name}, [
+      await levels.updateOne({_id: new ObjectID(level._id)}, [
           {
               $set: {
                   list: [record]

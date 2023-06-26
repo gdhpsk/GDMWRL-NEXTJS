@@ -5,6 +5,7 @@ import { json } from "stream/consumers";
 import leaderboard from "schemas/leaderboard";
 import mongoose from "mongoose";
 import webhook from "webhook";
+import { ObjectID } from "bson";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if(req.method != "DELETE") return res.status(403).json({message: "Incorrect method."})
@@ -41,28 +42,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         $filter: {
           input: "$records",
           as: "record",
-          cond: {$ne: ["$$record.name", level.name]}
+          cond: {"$not": [{$in: ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}]}
         }
       },
       completions: {
         $filter: {
           input: "$completions",
           as: "record",
-          cond: {$ne: ["$$record.name", level.name]}
+          cond: {"$not": [{$in: ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}]}
         }
       },
       extralist: {
         $filter: {
           input: "$extralist",
           as: "record",
-          cond: {$ne: ["$$record.name",  level.name]}
+          cond: {"$not": [{$in: ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}]}
         }
       },
       screenshot: {
         $filter: {
           input: "$screenshot",
           as: "record",
-          cond: {$ne: ["$$record.name", level.name]}
+          cond: {"$not": [{$in: ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}]}
         }
       }
     }

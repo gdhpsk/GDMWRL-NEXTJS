@@ -4,7 +4,7 @@ import levels from "schemas/levels";
 import { json } from "stream/consumers";
 import leaderboard from "schemas/leaderboard";
 import mongoose from "mongoose";
-import { ObjectID } from "bson";
+import { ObjectID, ObjectId } from "bson";
 import webhook from "webhook";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,17 +24,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if(req.body.changes.position <=  150 && level.position > 150) {
-        let lev = await levels.findOne({name: req.body.move150below ?? ""})
-        if(!lev) return res.status(400).json({message: "Please input a valid level for the move 150 below field!"})
+      try {
+        let lev = await levels.findById(req.body.move150below ?? "")
+        if(!lev) throw new Error()
         if(lev.position <= 150) return res.status(400).send({message: "The move 150 below field cannot be a top 150 level!"})
         additional_info.move150below = lev
+      } catch(_) {
+        return res.status(400).json({message: "Please input a valid level for the move 150 below field!"})
+      }
     }
 
     if(req.body.changes.position >  150 && level.position <= 150) {
+      try {
         let lev = await levels.findOne({name: req.body.new150 ?? ""})
-        if(!lev) return res.status(400).json({message: "Please input a valid level for the new 150 field!"})
+        if(!lev) throw new Error()
         if(lev.position <= 150) return res.status(400).send({message: "The new 150 field cannot be a top 150 level!"})
         additional_info.new150 = lev
+      } catch(_) {
+        return res.status(400).json({message: "Please input a valid level for the new 150 field!"})
+      }
     }
 
     if(additional_info.new150 || additional_info.move150below) {
@@ -43,13 +51,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         {"$addFields": {"levelNames": []}},
         {"$group": {
           _id: null,
-          levelNames: {"$push": "$name"},
           list: {
-            "$addToSet": "$list"
+            "$addToSet": {
+              "$map": {
+                input: "$list",
+                as: "record",
+                in: {
+                  $mergeObjects: [{levPos: "$position"}, "$$record"]
+                }
+              }
+            }
           }
         }},
         {"$project": {
-          levelNames: 1,
           list: {
             "$filter": {
               input: "$list",
@@ -59,7 +73,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
         }},
         {"$project": {
-          levelNames: 1,
+          ids: [{
+            "$map": {
+              input: {
+                "$filter": {
+                  input: "$list",
+                  as: "records",
+                  cond: {"$eq": ["$$records.levPos", 150]}
+                }
+              },
+              as: "record",
+              in: "$$record._id"
+            }
+          }, {
+            "$map": {
+              input: {
+                "$filter": {
+                  input: "$list",
+                  as: "records",
+                  cond: {"$ne": ["$$records.levPos", 150]}
+                }
+              },
+              as: "record",
+              in: "$$record._id"
+            }
+          }],
           names: {
             "$map": {
               input: "$list",
@@ -69,7 +107,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
         }},
         {"$project": {
-          levelNames: 1,
+          ids: {
+            "$map": {
+              input: "$ids",
+              as: "id",
+              in: {
+                "$reduce": {
+                  input: "$$id",
+                  initialValue: [],
+                  in: {"$concatArrays": ["$$value", "$$this"]}
+                }
+              }
+            }
+          },
           names: {
             "$reduce": {
               input: "$names",
@@ -79,7 +129,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
         }},
       ])
-      let {levelNames, names} = levelFilter[0]
+      let {ids, names} = levelFilter[0]
       await leaderboard.updateMany({name: {"$in": names}}, [
         {
           "$set": {
@@ -90,7 +140,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   as: "record",
                   cond: {"$and": [
                     {"$ne": ["$$record", "none"]},
-                    {"$ne": ["$$record.name", levelNames[0]]}
+                    {"$not":[{$in: ["$$record.id", ids[0]]}]}
                   ]}
                 }
               }, {
@@ -98,8 +148,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   input: "$extralist",
                   as: "record",
                   cond: {"$and": [
-                    {"$lt": ["$$record.percent", 100]},
-                    {"$eq": ["$$record.name", levelNames[1]]}
+                    {"$lt": [{$toInt: "$$record.percent"}, 100]},
+                    {"$in": ["$$record.id", ids[1]]}
                   ]}
                 }
               }]
@@ -111,7 +161,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   as: "record",
                   cond: {"$and": [
                     {"$ne": ["$$record", "none"]},
-                    {"$ne": ["$$record.name", levelNames[0]]}
+                    {"$not":[{$in: ["$$record.id", ids[0]]}]}
                   ]}
                 }
               }, {
@@ -119,8 +169,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   input: "$extralist",
                   as: "record",
                   cond: {"$and": [
-                    {"$eq": ["$$record.percent", 100]},
-                    {"$eq": ["$$record.name", levelNames[1]]}
+                    {"$eq": [{$toInt: "$$record.percent"}, 100]},
+                    {"$in": ["$$record.id", ids[1]]}
                   ]}
                 }
               }]
@@ -132,21 +182,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   as: "record",
                   cond: {"$and": [
                     {"$ne": ["$$record", "none"]},
-                    {"$ne": ["$$record.name",levelNames[1]]}
+                    {"$not":[{$in: ["$$record.id", ids[1]]}]}
                   ]}
                 }
               }, {
                 "$filter": {
                   input: "$records",
                   as: "record",
-                  cond: {"$eq": ["$$record.name", levelNames[0]]}
+                  cond: {$in: ["$$record.id", ids[0]]}
                 }
               }, 
               {
                 "$filter": {
                   input: "$completions",
                   as: "record",
-                  cond: {"$eq": ["$$record.name", levelNames[0]]}
+                  cond: {$in: ["$$record.id", ids[0]]}
                 }
               }]
             }
@@ -214,7 +264,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             in: {
               "$switch": {
                 branches: [
-                  {case: {"$eq": ["$$record.name", level.name]}, then: {
+                  {case: {"$in": ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}, then: {
                     name: req.body.changes.name,
                     percent: "$$record.percent",
                     hertz: "$$record.hertz",
@@ -234,7 +284,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             in: {
               "$switch": {
                 branches: [
-                  {case: {"$eq": ["$$record.name", level.name]}, then: {
+                  {case: {"$in": ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}, then: {
                     name: req.body.changes.name,
                     percent: "$$record.percent",
                     hertz: "$$record.hertz",
@@ -254,7 +304,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             in: {
               "$switch": {
                 branches: [
-                  {case: {"$eq": ["$$record.name", level.name]}, then: {
+                  {case: {"$in": ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}, then: {
                     name: req.body.changes.name,
                     percent: "$$record.percent",
                     hertz: "$$record.hertz",
@@ -274,7 +324,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             in: {
               "$switch": {
                 branches: [
-                  {case: {"$eq": ["$$record.name", level.name]}, then: {
+                  {case: {"$in": ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}, then: {
                     name: req.body.changes.name,
                     percent: "$$record.percent",
                     hertz: "$$record.hertz",
@@ -324,38 +374,13 @@ if(req.body.changes.list) {
     return "completions"
   }
   replacements.names.forEach(async (names:[string, string, any]) => {
-    await leaderboard.updateOne({name: names[0]}, [{
-      $set: {
-        records: {
-          $filter: {
-            input: "$records",
-            as: "record",
-            cond: {$ne: ["$$record.name", req.body.changes.name ?? level.name]}
-          }
-        },
-        completions: {
-          $filter: {
-            input: "$completions",
-            as: "record",
-            cond: {$ne: ["$$record.name", req.body.changes.name ?? level.name]}
-          }
-        },
-        extralist: {
-          $filter: {
-            input: "$extralist",
-            as: "record",
-            cond: {$ne: ["$$record.name", req.body.changes.name ?? level.name]}
-          }
-        },
-        screenshot: {
-          $filter: {
-            input: "$screenshot",
-            as: "record",
-            cond: {$ne: ["$$record.name", req.body.changes.name ?? level.name]}
-          }
+    await leaderboard.updateOne({name: names[0]}, {
+      $pull: {
+        [classify(parseInt(names[2].percent[0]), names[2].screenshot, req.body.changes.position ?? level.position)]: {
+          id: new ObjectId(names[2].id)
         }
       }
-    }])
+    })
     await leaderboard.updateOne({name: names[1]}, {
       $push: {
         [classify(names[2].percent, names[2].screenshot, req.body.changes.position ?? level.position)]: names[2]
