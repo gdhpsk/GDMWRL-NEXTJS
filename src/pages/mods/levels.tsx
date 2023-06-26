@@ -288,7 +288,7 @@ export default function Settings() {
                             }
                           }}>
                             <option>Select a Level</option>
-                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
+                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option key={e._id.toString()} value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
                           </Form.Select>
                         <Button style={{float: "left"}} onClick={() => {
                             resolve(0)
@@ -378,7 +378,7 @@ export default function Settings() {
                             }
                           }}>
                             <option>Select a Level</option>
-                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
+                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option key={e._id.toString()} value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
                           </Form.Select>
                       <Button style={{float: "left"}} onClick={resolve}>Go</Button>
                     </InputGroup>
@@ -461,7 +461,7 @@ export default function Settings() {
                             }
                           }}>
                             <option>Select a Level</option>
-                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
+                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option key={e._id.toString()} value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
                           </Form.Select>
                           <Button style={{float: "left"}} onClick={() => {
                               resolve(0)
@@ -489,7 +489,7 @@ export default function Settings() {
                             }
                           }}>
                             <option>Select a Level</option>
-                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
+                            {levels.filter((e:any) => e.position > 150).map((e:any) => <option key={e._id.toString()} value={`${e._id} @ ${e.name} by ${e.host}`}>{e.name} by {e.host} ({e._id})</option>)}
                           </Form.Select>
                         <Button style={{float: "left"}} onClick={resolve}>Go</Button>
                       </InputGroup>
