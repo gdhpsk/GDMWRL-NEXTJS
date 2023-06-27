@@ -25,7 +25,7 @@ const Level: React.FC<LeaderboardProps> = ({ name, socials, nationality, points,
             if(list[0] == "none" || !list.length) {
                 return <p className='white' style={{textAlign: "center"}}>none</p>
             }
-            let pos = (e: any) => levels?.find((j: any) => j.name == e.name)?.position
+            let pos = (e: any) => levels?.find((j: any) => j.list.find((x:any) => x._id.toString() == e.id.toString()))?.position
             let txt = <ul>
             {list.map(e => <li key={e.id} className="white" style={{fontSize: "14px", textAlign: "left"}}>{e.name} {e.percent}% ({pos(e) ? `#${pos(e)}, ` : ""}{e.hertz}hz)</li>)}
             </ul>

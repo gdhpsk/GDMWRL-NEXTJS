@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   await leaderboard.updateOne({name: record.name}, {
     $push: {
       [classify(parseInt(record.percent[0]), record.screenshot, level.position)]: {
-        name: level.name,
+        name: `${level.name} by ${level.host}`,
         percent: record.percent[0],
         hertz: record.hertz,
         verification: record.verification,

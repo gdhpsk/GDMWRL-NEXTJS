@@ -267,7 +267,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               "$switch": {
                 branches: [
                   {case: {"$in": ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}, then: {
-                    name: req.body.changes.name,
+                    name: `${req.body.changes.name} by ${req.body.changes.host ?? level.host}`,
                     percent: "$$record.percent",
                     hertz: "$$record.hertz",
                     verification: "$$record.verification",
@@ -287,7 +287,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               "$switch": {
                 branches: [
                   {case: {"$in": ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}, then: {
-                    name: req.body.changes.name,
+                    name: `${req.body.changes.name} by ${req.body.changes.host ?? level.host}`,
                     percent: "$$record.percent",
                     hertz: "$$record.hertz",
                     verification: "$$record.verification",
@@ -307,7 +307,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               "$switch": {
                 branches: [
                   {case: {"$in": ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}, then: {
-                    name: req.body.changes.name,
+                    name: `${req.body.changes.name} by ${req.body.changes.host ?? level.host}`,
                     percent: "$$record.percent",
                     hertz: "$$record.hertz",
                     verification: "$$record.verification",
@@ -327,7 +327,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               "$switch": {
                 branches: [
                   {case: {"$in": ["$$record.id", level.list.map((e:any) => new ObjectID(e._id))]}, then: {
-                    name: req.body.changes.name,
+                    name: `${req.body.changes.name} by ${req.body.changes.host ?? level.host}`,
                     percent: "$$record.percent",
                     hertz: "$$record.hertz",
                     verification: "$$record.verification",
@@ -349,7 +349,7 @@ if(req.body.changes.list) {
       if(!eq) return undefined;
       if(eq.name == e.name) return undefined;
       return [e.name, eq.name, {
-        name: req.body.changes.name ?? level.name,
+        name: `${req.body.changes.name ?? level.name} by ${req.body.changes.host ?? level.host}`,
         percent: eq.percent[0],
         hertz: eq.hertz,
         verification: eq.verification,
@@ -361,7 +361,7 @@ if(req.body.changes.list) {
       if(!eq) return undefined;
       if(eq.percent[0] == e.percent[0] && eq.screenshot == e.screenshot && eq.hertz == e.hertz && eq.verification == e.verification) return undefined;
       return [eq.name, {
-        name: req.body.changes.name ?? level.name,
+        name: `${req.body.changes.name ?? level.name} by ${req.body.changes.host ?? level.host}`,
         percent: eq.percent[0],
         hertz: eq.hertz,
         verification: eq.verification,
