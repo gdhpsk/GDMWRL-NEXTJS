@@ -1,5 +1,6 @@
 import Level from "@/components/Level"
 import styles from "@/styles/guidelines.module.css"
+import Link from "next/link"
 
 
 export default function Home() {
@@ -27,13 +28,13 @@ export default function Home() {
 
 ➢ The website is organized into three different categories.
 <br></br>
-➢ The <a href="index.html">Main List</a> consists of the same content as <a href="https://www.pointercrate.com" target="_blank" rel="noreferrer">Pointercrate&#39;s Demonlist</a>, the top #1 - #75 hardest Extreme Demons.
+➢ The <Link href="/">Main List</Link> consists of the same content as <a href="https://www.pointercrate.com" target="_blank" rel="noreferrer">Pointercrate&#39;s Demonlist</a>, the top #1 - #75 hardest Extreme Demons.
 <br></br>
-➢ The same configuration goes to the <a href="extended.html">Extended List</a>, including the top #76- #150 from <a href="https://www.pointercrate.com" target="_blank" rel="noreferrer">Pointercrate&#39;s Demonlist.</a>
+➢ The same configuration goes to the <Link href="/extended">Extended List</Link>, including the top #76- #150 from <a href="https://www.pointercrate.com" target="_blank" rel="noreferrer">Pointercrate&#39;s Demonlist.</a>
 <br></br>
-➢ The <a href="legacy.html">Extra List</a> consists of all the remaining Extreme Demons rated in-game and demons that are Mobile-List-worthy, organized in alphabetical order.
+➢ The <Link href="/legacy">Extra List</Link> consists of all the remaining Extreme Demons rated in-game and demons that are Mobile-List-worthy, organized in alphabetical order.
 <br></br>
-➢ Inside the <a href="legacy.html">Extra List</a> there is a second category, which is the Past Rated Extreme Demons. These include the levels that were Extreme Demons but got unrated/updated exclusively. Any levels here must be Extreme Demon worthy to be on there.
+➢ Inside the <Link href="/legacy">Extra List</Link> there is a second category, which is the Past Rated Extreme Demons. These include the levels that were Extreme Demons but got unrated/updated exclusively. Any levels here must be Extreme Demon worthy to be on there.
 <br></br>
 ➢ Each level has its own position and has the credit for the creators and verifier. Positioning doesn&#39;t apply to the Extra List however.
 <br></br>
