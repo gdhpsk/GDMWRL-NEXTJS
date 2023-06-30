@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   let {level} = req.body
   let count = await levels.count()
-  let editPos = await fetch("https://gdmwrl-nextjs.vercel.app/api/levels/edit", {
+  let editPos = await fetch("https://gdmobilewrlist.com/api/levels/edit", {
     method: "PATCH",
     headers: {
         'content-type': 'application/json'
