@@ -36,7 +36,7 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
                     {records[0].name == "" ? "" : records.filter(e => e.percent.includes("100")).map(e => {
                             return (
                             <p className="white"  key={e.name}>
-                                <b>[{e.verification ? "V/" : ""}{e.hertz}hz] {e.listpercent && n < 76 ? "(List%) " : ""}{e.name} - {e.percent[0]}% {e.percent[1] ? <i>{e.percent[1]}</i> : ""}<a href={e.link} target={"_blank"} rel={"noreferrer"}>{e.screenshot ? "(Screenshot)" : "(Link)"}</a>&nbsp;</b>
+                                <b>[{e.verification ? "V/" : ""}{e.hertz}fps] {e.listpercent && n < 76 ? "(List%) " : ""}{e.name} - {e.percent[0]}% {e.percent[1] ? <i>{e.percent[1]}</i> : ""}<a href={e.link} target={"_blank"} rel={"noreferrer"}>{e.screenshot ? "(Screenshot)" : "(Link)"}</a>&nbsp;</b>
                             </p>
                             )
                         })}
@@ -45,7 +45,7 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
                         {records[0].name == "" ? <h5 style={{"fontSize": "10px" }} className="white"><b>(No World Records registered. The minimum requirement for a World Record is 10%.)</b></h5> : records.filter(e => !e.percent.includes("100")).map(e => {
                             return (
                             <p className="white" key={e.name}>
-                                <b>[{e.hertz}hz] {e.listpercent ? "(List%) " : ""}{e.name} - {e.percent[0]}% {e.percent[1] ? <i>{e.percent[1]}%</i> : ""}<a href={e.link} target={"_blank"} rel={"noreferrer"}>{e.screenshot ? "(Screenshot)" : "(Link)"}</a>&nbsp;</b>
+                                <b>[{e.hertz}fps] {e.listpercent ? "(List%) " : ""}{e.name} - {e.percent[0]}% {e.percent[1] ? <i>{e.percent[1]}%</i> : ""}<a href={e.link} target={"_blank"} rel={"noreferrer"}>{e.screenshot ? "(Screenshot)" : "(Link)"}</a>&nbsp;</b>
                             </p>
                             )
                         })}

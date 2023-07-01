@@ -14,9 +14,6 @@ interface HeaderProps {
 }
 
 function App({name, mainRoutes, active}: HeaderProps) {
-  if(active == "/index") {
-    active = "/"
-  }
   let auth = getAuth()
   let [loggedIn, setLoggedIn] = useState(auth?.currentUser)
   onAuthStateChanged(auth, async (e) => {

@@ -19,7 +19,7 @@ function App({ Component, pageProps, active }: AppProps | any) {
           name='Mobile World Records'
           mainRoutes={{
             "Guidelines": '/guidelines',
-            "Main List": '/',
+            "Main List": '/main',
             "Extended List": '/extended',
             "Extra List": '/legacy',
             "Leaderboard": '/leaderboard',
