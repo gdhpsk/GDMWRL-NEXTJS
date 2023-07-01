@@ -115,9 +115,9 @@ export default function Home() {
 <br></br>
 <a href="https://forms.gle/2UhMp8ravaBKCjpm8" target="_blank" rel="noreferrer">Submission Form</a>
 <br></br>
-➢ Our Repl.It Source Code
+➢ Our GitHub Source Code
 <br></br>
-<a href="https://replit.com/@ssamosa211/gdmobilewrlist" target="_blank" rel="noreferrer">Source Code</a>
+<a href="https://github.com/gdhpsk/GDMWRL-NEXTJS" target="_blank" rel="noreferrer">Source Code</a>
 <h2>Credits</h2>
 {"Special thanks to Ryan9328. They&#39;re the original owner of the code our team tweaked, go check them out."}
 <br></br>

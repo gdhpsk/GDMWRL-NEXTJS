@@ -64,7 +64,7 @@ export default function Home() {
   return (
     <div>
     <Script src="sweetalert2/dist/sweetalert2.min.js" defer></Script>
-      <div className="bannerone">
+      <div className="bannerfour">
         <h1 className="page-title">Leaderboard</h1>
       </div>
     <Container>
