@@ -34,7 +34,6 @@ function App({ Component, pageProps, active }: AppProps | any) {
 
 App.getInitialProps  = async ({ctx}: any) => {
   // Your code
-  let {req} = ctx
   // Passing data to the Page using props
   return {
          active: ctx.pathname

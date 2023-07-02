@@ -5,11 +5,11 @@ import { Button, Container } from "react-bootstrap"
 import Level from"../components/Level"
 import {models} from "mongoose"
 import Leaderboard from "@/components/Leaderboard"
-import { NextApiRequest } from "next"
+import { NextApiRequest, NextPageContext } from "next"
 import Script from "next/script"
 
 
-export default function Home() {
+export default function Home({arr}: {arr: Array<Record<any, any>>}) {
     let [wrs, setByWrs] = useState<Boolean>(false)
     function calcPoints(wr: any) {
         let {records, completions, extralist_comp, extralist_prog, screenshot, minus} = {
@@ -44,19 +44,7 @@ export default function Home() {
         }
       })()
   }, [])
-  let [lead, setLead] = useState<Array<any>>([])
-  useEffect(() => {
-      (async () => {
-        try {
-          let levels = await fetch("/api/leaderboard")
-          let json = await levels.json()
-          setLead(Object.values(json).sort((a: any, b: any) => calcPoints(b) - calcPoints(a)))
-        } catch(_) {
-
-        }
-      })()
-  }, [])
-
+  let [lead, setLead] = useState<Array<any>>(arr)
   useEffect(() => {
     setLead([...lead].sort((a,b) => calcPoints(b) - calcPoints(a)))
   }, [wrs])
@@ -96,4 +84,12 @@ export default function Home() {
     </Container>
     </div>
   )
+}
+
+export async function getServerSideProps(ctx: NextPageContext) {
+  const data = await fetch(`https://gdmobilewrlist.com/api/leaderboard`)
+  let json = await data.json()
+  return {
+    props: {arr: json}
+  }
 }

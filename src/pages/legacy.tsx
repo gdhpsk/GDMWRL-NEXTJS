@@ -1,13 +1,14 @@
 import { models } from "mongoose"
 import {useState, useEffect} from "react"
-import { Container, Dropdown, DropdownButton } from "react-bootstrap"
+import { Container, Dropdown, DropdownButton, SSRProvider } from "react-bootstrap"
 import Level from"../components/Level"
 import levels from "../../unrated.json"
+import { NextPageContext } from "next"
 
-export default function Home() {
+export default function Home({page_one}: {page_one: Array<Record<any, any>>}) {
   let [pages, setPages] = useState(1)
   let [page, setPage] = useState(1)
-    let [array, setArray] = useState<any>([])
+    let [array, setArray] = useState<any>([{page:1, levels: page_one}])
   useEffect(() => {
       (async () => {
         try {
@@ -37,7 +38,7 @@ export default function Home() {
     document.documentElement.scrollTop =0; 
   }
   return (
-    <div>
+    <SSRProvider>
       <div className="bannerthree">
         <h1 className="page-title">Extra List</h1>
         <h1 className="page-subtitle">(All Extreme Demons)</h1>
@@ -84,6 +85,14 @@ export default function Home() {
     </div>
     <p style={{"textDecoration": "underline", "textAlign": "center"}} onClick={topFunction} className="white">To the top</p>
     </Container>
-    </div>
+    </SSRProvider>
   )
+}
+
+export async function getServerSideProps(ctx: NextPageContext) {
+  const data = await fetch(`https://gdmobilewrlist.com/api/levels/extra?page=1`)
+  let json = await data.json()
+  return {
+    props: {page_one: json.data}
+  }
 }

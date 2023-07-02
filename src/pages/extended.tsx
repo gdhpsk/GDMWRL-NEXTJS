@@ -1,19 +1,10 @@
 import { models } from "mongoose"
 import {useState, useEffect} from "react"
-import { Container } from "react-bootstrap"
+import { Container, SSRProvider } from "react-bootstrap"
 import Level from"../components/Level"
+import { NextPageContext } from "next"
 
-export default function Home() {
-
-    let [array, setArray] = useState<Array<Record<any, any>>>([])
-    useEffect(() => {
-      (async () => {
-        const data = await fetch(`/api/levels/150`)
-        let json = await data.json()
-        setArray(json)
-      })()
-  
-    }, [])
+export default function Home({array}: {array: Array<Record<any, any>>}) {
   function botFunction() {
     document.body.scrollTop = document.body.scrollHeight;
     document.documentElement.scrollTop = document.body.scrollHeight; 
@@ -23,7 +14,7 @@ export default function Home() {
     document.documentElement.scrollTop =0; 
   }
   return (
-    <div>
+    <SSRProvider>
       <div className="bannertwo">
         <h1 className="page-title">Extended List</h1>
         <h1 className="page-subtitle">(Top 76 - Top 150)</h1>
@@ -50,6 +41,14 @@ export default function Home() {
     </div>
     <p style={{"textDecoration": "underline", "textAlign": "center"}} onClick={topFunction} className="white">To the top</p>
     </Container>
-    </div>
+    </SSRProvider>
   )
+}
+
+export async function getServerSideProps(ctx: NextPageContext) {
+  const data = await fetch(`https://gdmobilewrlist.com/api/levels/150`)
+  let json = await data.json()
+  return {
+    props: {array: json}
+  }
 }

@@ -1,20 +1,11 @@
 
 
 import {useState, useEffect} from "react"
-import { Container } from "react-bootstrap"
+import { Container, SSRProvider } from "react-bootstrap"
 import Level from"../components/Level"
+import { NextPageContext } from "next"
 
-export default function Home() {
-  let [array, setArray] = useState<Array<Record<any, any>>>([])
-  useEffect(() => {
-    (async () => {
-      const data = await fetch(`/api/levels/75`)
-      let json = await data.json()
-      setArray(json)
-    })()
-
-  }, [])
-
+export default function Home({array}: {array: Array<Record<any, any>>}) {
   function botFunction() {
     document.body.scrollTop = document.body.scrollHeight;
     document.documentElement.scrollTop = document.body.scrollHeight; 
@@ -25,7 +16,7 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <SSRProvider>
       <div className="bannerone">
         <h1 className="page-title">Main List</h1>
         <h1 className="page-subtitle">(Top 1 - Top 75)</h1>
@@ -52,6 +43,14 @@ export default function Home() {
     </div>
     <p style={{"textDecoration": "underline", "textAlign": "center"}} onClick={topFunction} className="white">To the top</p>
     </Container>
-    </div>
+    </SSRProvider>
   )
+}
+
+export async function getServerSideProps(ctx: NextPageContext) {
+  const data = await fetch(`https://gdmobilewrlist.com/api/levels/75`)
+  let json = await data.json()
+  return {
+    props: {array: json}
+  }
 }
