@@ -948,7 +948,7 @@ export default function Settings() {
           newLevel.list[i].hertz = parseInt(e.target.value)
           setEditedLevel(newLevel)
           }, 0)
-        }}/> {editedLevel.list[i].link != level.list[i].link ? "*" : ""}</h1>
+        }}/> {editedLevel.list[i].hertz != level.list[i].hertz ? "*" : ""}</h1>
         <br></br><br></br><br></br>
           </div>
         })}
