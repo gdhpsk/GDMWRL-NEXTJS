@@ -27,7 +27,7 @@ const Level: React.FC<LeaderboardProps> = ({ name, socials, nationality, points,
             }
             let pos = (e: any) => levels?.find((j: any) => j.list.find((x:any) => x._id.toString() == e.id.toString()))?.position
             let txt = <ul>
-            {list.map(e => <li key={e.id} className="white" style={{fontSize: "14px", textAlign: "left"}}>{e.name} {e.percent}% ({pos(e) ? `#${pos(e)}, ` : ""}{e.hertz}fps)</li>)}
+            {list.map(e => <li key={e.id} className="white" style={{fontSize: "14px", textAlign: "left"}}>{e.verification ? "(V) " : ""}{e.name} {e.percent}% ({pos(e) ? `#${pos(e)}, ` : ""}{e.hertz}fps)</li>)}
             </ul>
             return txt
         }
