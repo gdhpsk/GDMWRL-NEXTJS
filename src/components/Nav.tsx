@@ -56,6 +56,11 @@ function App({name, mainRoutes, active}: HeaderProps) {
               </Nav.Link>
             ))}  
             {loggedIn ? <Settings></Settings> : <Auth></Auth>}
+            <Nav.Link
+                href="https://discord.gg/9dgpqqhhc2"
+                target="_blank"
+                style={{color: 'white'}}
+              ><img src="/icons/discord.svg" style={{width: "30px"}}></img></Nav.Link>
           </Navbar.Collapse>
       </Container>
     </Navbar>
