@@ -308,7 +308,7 @@ export default function Settings() {
                 html: <>
                     <h5>Please recheck all of your information:</h5>
                     <br></br>
-                    {info.move150below ? <p>Current #150 level below: {info.move150below.name}</p> : ""}
+                    {info.move150below.name ? <p>Current #150 level below: {info.move150below.name}</p> : ""}
                     {Object.entries(editedLevel).map(e => e[0] == "_id" ? "" : <p key={e[0]}>{e[0]}: {e[1] as any}</p>)}
                     <br></br>
                     <div>
@@ -395,7 +395,7 @@ export default function Settings() {
                 html: <>
                     <h5>You are deleting the level {level.name} by &quot;{level.host}&quot;</h5>
                     <br></br>
-                    {info.new150 ? <p>New #150 Level: {info.new150.name}</p> : ""}
+                    {info.new150.name ? <p>New #150 Level: {info.new150.name}</p> : ""}
                     <br></br>
                     <div>
                       <Button style={{float: "left"}} onClick={resolve}>Confirm</Button>
@@ -513,23 +513,30 @@ export default function Settings() {
                     html: <>
                         <h5>To recap, here are all the changes you made on the level &quot;{level.name}&quot; by {level.host}:</h5>
                         <br></br>
-                        {info.new150 ? <p>New #150 level: {info.new150.name}</p> : ""}
-                        {info.move150below ? <p>Current #150 level below: {info.move150below.name}</p> : ""}
+                        {info.new150.name ? <p>New #150 level: {info.new150.name}</p> : ""}
+                        {info.move150below.name ? <p>Current #150 level below: {info.move150below.name}</p> : ""}
                         {changed.map((e: any) => {
                           if(e[0] != "list") {
                             return <p key={e[0]}>{e[0]}: {e[1]} {"=>"} {editedLevel[e[0]]}</p>
                           }
-                          return <p key={e[0]}>{e[0]}: {e[1].map((x: any) => <>
-                            {Object.entries(x).map((i: any) => {
-                              if(i[0] == "_id") return;
-                              return <p key={i[0]}>{i[0]}: {i[1]}</p>
-                            })}
-                        </>)} {"=>"} <br></br>  {editedLevel[e[0]].map((x: any) => <>
-                              {Object.entries(x).map((i: any) => {
-                                if(i[0] == "_id") return;
-                                return <p key={i[0]}>{i[0]}: {i[1]}</p>
-                              })}
-                          </>)}</p>
+                          let changes: any = []
+                          editedLevel[e[0]].forEach((x:any) => {
+                            let ind = editedLevel[e[0]].indexOf(x)
+                            Object.entries(x).forEach((i:any) => {
+                              if(i[0] == "percent") {
+                                  Object.entries(i[1]).forEach((h:any) => {
+                                  if(h[1] != e[1][ind][i[0]][h[0]]) {
+                                    changes.push(<p key={`list.${ind}.${i[0]}.${h[0]}`}>list.{ind}.{i[0]}.{h[0]}: {e[1][ind][i[0]][h[0]]} {"=>"} {h[1]}</p>)
+                                  }
+                                })
+                                return
+                              }
+                              if(i[1] != e[1][ind][i[0]]) {
+                                changes.push(<p key={`list.${ind}.${i[0]}`}>list.{ind}.{i[0]}: {typeof i[1] == "boolean" ? JSON.stringify(e[1][ind][i[0]]) : e[1][ind][i[0]]} {"=>"} {typeof i[1] == "boolean" ? JSON.stringify(i[1]) : i[1]}</p>)
+                              }
+                            })
+                          })
+                          return changes
                         })}
                         <br></br>
                         <div>
