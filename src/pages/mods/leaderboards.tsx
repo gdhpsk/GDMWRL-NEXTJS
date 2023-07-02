@@ -6,7 +6,7 @@ import { Button, Form, FormControl, InputGroup } from "react-bootstrap"
 import withReactContent from "sweetalert2-react-content"
 import Swal from "sweetalert2"
 
-export default function Settings() {
+export default function Settings({nationalities}: any) {
     let [perms, setPerms] = useState<any>(null)
     let [profile, setProfile] = useState<any>(null)
     let [editedProfile, setEditedProfile] = useState<any>(null)
@@ -349,15 +349,17 @@ export default function Settings() {
                     }, 0)
                 }}></input> {editedProfile.name != profile.name ? "*" : ""}</h1>
                 <br></br>
-                <h1 style={{textAlign: "center"}} className="white">Nationality: <input style={{width: `${editedProfile.nationality?.length || 15}ch`}} defaultValue={profile?.nationality} onChange={(e:any) => {
-                    setTimeout(() => {
-                        let {value} = e.target
-                    setEditedProfile({
-                        ...editedProfile,
-                        nationality: value
-                    })
-                    }, 0)
-                }}></input> {editedProfile.nationality != profile.nationality ? "*" : ""}</h1>
+                <h1 style={{textAlign: "center"}} className="white">Nationality: <div style={{display: "grid", placeItems: "center", marginTop: "20px"}}><Form.Select style={{width: "fit-content"}} defaultValue={profile.nationality} onChange={(e:any) => {
+                  setTimeout(() => {
+                    let {value} = e.target
+                setEditedProfile({
+                    ...editedProfile,
+                    nationality: value
+                })
+                }, 0)
+                }}>
+                    {Object.keys(nationalities).map(e => <option value={e}>{e}</option>)}
+                  </Form.Select></div> {editedProfile.nationality != profile.nationality ? "*" : ""}</h1>
                 <br></br>
                 <h1 style={{textAlign: "center"}} className="white">Minus Points: <input type="number" style={{width: `4ch`}} defaultValue={profile.minus} onChange={(e:any) => {
                     setTimeout(() => {
@@ -449,4 +451,12 @@ export default function Settings() {
       </div>
       </div>
     </>
+}
+
+export async function getServerSideProps(ctx: any) {
+  let res = await fetch("https://insanedemonlist.com/api/nations")
+  let data = await res.json()
+  return {
+    props: {nationalities: data}
+  }
 }

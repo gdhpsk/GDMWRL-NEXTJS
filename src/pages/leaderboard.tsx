@@ -9,7 +9,7 @@ import { NextApiRequest, NextPageContext } from "next"
 import Script from "next/script"
 
 
-export default function Home({arr}: {arr: Array<Record<any, any>>}) {
+export default function Home({arr, nationalities}: {nationalities: any, arr: Array<Record<any, any>>}) {
     let [wrs, setByWrs] = useState<Boolean>(false)
     function calcPoints(wr: any) {
         let {records, completions, extralist_comp, extralist_prog, screenshot, minus} = {
@@ -69,7 +69,7 @@ export default function Home({arr}: {arr: Array<Record<any, any>>}) {
           completions={e.completions}
           extralist={e.extralist}
           screenshot={e.screenshot}
-          nationality={e.nationality}
+          nationality={[e.nationality, nationalities[e.nationality]]}
           socials={e.socials}
           points={calcPoints(e)}
           key={e.id}
@@ -89,7 +89,9 @@ export default function Home({arr}: {arr: Array<Record<any, any>>}) {
 export async function getServerSideProps(ctx: NextPageContext) {
   const data = await fetch(`https://gdmobilewrlist.com/api/leaderboard`)
   let json = await data.json()
+  let res = await fetch("https://insanedemonlist.com/api/nations")
+  let nationalities = await res.json()
   return {
-    props: {arr: json}
+    props: {arr: json, nationalities}
   }
 }

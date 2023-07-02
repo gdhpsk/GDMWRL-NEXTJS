@@ -10,7 +10,7 @@ interface LeaderboardProps {
     completions: Array<any>,
     extralist: Array<any>,
     screenshot: Array<any>,
-    nationality: string,
+    nationality: [string, any],
     socials: Array<any>,
     points: number,
     levels: Array<any>
@@ -51,7 +51,7 @@ const Level: React.FC<LeaderboardProps> = ({ name, socials, nationality, points,
     }
     return (
         <div style={{display: "grid", placeItems: "center"}}>
-            <p className={"white " + styles.entry} onClick={async () => display()}><b>{nationality ? <abbr title={nationality}><img width="24" height="18" alt="flag" className={styles.nationality} src={`/nationalities/${nationality}.svg`} loading={"lazy"}/></abbr> : ""} {name} ({points} {bywrs ? "record" : "point"}{points == 1 ? "" : "s"})</b></p>
+            <p className={"white " + styles.entry} onClick={async () => display()}><b>{nationality[0] ? <abbr title={nationality[0]}><img width="24" height="18" alt="flag" className={styles.nationality} src={`https://raw.githubusercontent.com/lipis/flag-icons/4f420bdd2e954f6da11220f1136fa181ed7019e7/flags/4x3/${nationality[1]}.svg`} loading={"lazy"}/></abbr> : ""} {name} ({points} {bywrs ? "record" : "point"}{points == 1 ? "" : "s"})</b></p>
         </div>
     )
 }
