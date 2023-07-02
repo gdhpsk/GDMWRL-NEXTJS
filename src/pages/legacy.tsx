@@ -5,10 +5,10 @@ import Level from"../components/Level"
 import levels from "../../unrated.json"
 import { NextPageContext } from "next"
 
-export default function Home({page_one}: {page_one: Array<Record<any, any>>}) {
-  let [pages, setPages] = useState(1)
+export default function Home({page_one}: {page_one: Record<any, any>}) {
+  let [pages, setPages] = useState(page_one.pages)
   let [page, setPage] = useState(1)
-    let [array, setArray] = useState<any>([{page:1, levels: page_one}])
+    let [array, setArray] = useState<any>([{page:1, levels: page_one.data}])
   useEffect(() => {
       (async () => {
         try {
@@ -93,6 +93,6 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const data = await fetch(`https://gdmobilewrlist.com/api/levels/extra?page=1`)
   let json = await data.json()
   return {
-    props: {page_one: json.data}
+    props: {page_one: json}
   }
 }
