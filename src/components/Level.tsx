@@ -35,7 +35,7 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
                         {records.find(e => e.percent.includes("100")) ? <h5 style={{"fontSize": "30px" }} className="white title"><i>Completions</i></h5> : ""}
                     {records[0].name == "" ? "" : records.filter(e => e.percent.includes("100")).map(e => {
                             return (
-                            <p className="white" style={{backgroundColor: `${e.screenshot ? "#ABABAB" : "white"} !important`}} key={e.name}>
+                            <p style={{color: e.screenshot ? "#ABABAB" : "white"}} key={e.name}>
                                 <b>[{e.verification ? "V/" : ""}{e.hertz}fps] {e.listpercent && n < 76 ? "(List%) " : ""}{e.name} - {e.percent[0]}% {e.percent[1] ? <i>{e.percent[1]}</i> : ""}<a href={e.link} target={"_blank"} rel={"noreferrer"}>{e.screenshot ? "(Screenshot)" : "(Link)"}</a>&nbsp;</b>
                             </p>
                             )
@@ -44,7 +44,7 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
 {records.find(e => !e.percent.includes("100")) ? <h5 style={{"fontSize": "30px" }} className="white title"><i>Mobile World Records</i></h5> : ""}
                         {records[0].name == "" ? <h5 style={{"fontSize": "10px" }} className="white"><b>(No World Records registered. The minimum requirement for a World Record is 10%.)</b></h5> : records.filter(e => !e.percent.includes("100")).map(e => {
                             return (
-                            <p className="white" key={e.name}>
+                            <p style={{color: e.screenshot ? "#ABABAB" : "white"}} key={e.name}>
                                 <b>[{e.hertz}fps] {e.listpercent ? "(List%) " : ""}{e.name} - {e.percent[0]}% {e.percent[1] ? <i>{e.percent[1]}%</i> : ""}<a href={e.link} target={"_blank"} rel={"noreferrer"}>{e.screenshot ? "(Screenshot)" : "(Link)"}</a>&nbsp;</b>
                             </p>
                             )
