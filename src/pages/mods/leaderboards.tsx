@@ -358,7 +358,7 @@ export default function Settings({nationalities}: any) {
                 })
                 }, 0)
                 }}>
-                    {Object.keys(nationalities).map(e => <option value={e}>{e}</option>)}
+                    {Object.keys(nationalities).map(e => <option key={e} value={e}>{e}</option>)}
                   </Form.Select></div> {editedProfile.nationality != profile.nationality ? "*" : ""}</h1>
                 <br></br>
                 <h1 style={{textAlign: "center"}} className="white">Minus Points: <input type="number" style={{width: `4ch`}} defaultValue={profile.minus} onChange={(e:any) => {
