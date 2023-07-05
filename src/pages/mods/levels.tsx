@@ -597,7 +597,7 @@ export default function Settings() {
           newLevel.position = parseInt(e.target.value)
           setEditedLevel(newLevel)
           }, 0)
-        }}/>{editedLevel.position != level.position ? " *" : ""}: <input placeholder="Name..."  style={{width: `${editedLevel.name.length || 5}ch`}} defaultValue={level.name} onChange={(e:any) => {
+        }}/>{editedLevel.position != level.position ? " *" : ""}: <textarea placeholder="Name..."  style={{width: `${Math.min(editedLevel.name.length || 4, 25)}ch`}} defaultValue={level.name} onChange={(e:any) => {
           setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.name = e.target.value
@@ -605,7 +605,7 @@ export default function Settings() {
           }, 0)
         }}/> {editedLevel.name != level.name ? "*" : ""}</h1> 
         <br></br>
-        <h1 style={{textAlign: "center"}} className="white">Host: <input style={{width: `${editedLevel.host.length || 4}ch`}} defaultValue={level.host} onChange={(e:any) => {
+        <h1 style={{textAlign: "center"}} className="white">Host: <textarea style={{maxWidth: `${Math.min(editedLevel.host.length || 4, 25)}ch`}} defaultValue={level.host} onChange={(e:any) => {
             setTimeout(() => {
               let newLevel = structuredClone(editedLevel)
             newLevel.host = e.target.value
@@ -613,7 +613,7 @@ export default function Settings() {
             }, 0)
         }}/> {editedLevel.host != level.host ? "*" : ""}</h1> 
         <br></br>
-        <h1 style={{textAlign: "center"}} className="white">Verifier: <input style={{width: `${editedLevel.verifier.length || 8}ch`}} defaultValue={level.verifier} onChange={(e:any) => {
+        <h1 style={{textAlign: "center"}} className="white">Verifier: <textarea style={{width: `${Math.min(editedLevel.verifier.length || 4, 25)}ch`}} defaultValue={level.verifier} onChange={(e:any) => {
           setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.verifier = e.target.value
@@ -621,7 +621,7 @@ export default function Settings() {
           }, 0)
         }}/> {editedLevel.verifier != level.verifier ? "*" : ""}</h1> 
         <br></br>
-        <h1 style={{textAlign: "center"}} className="white">YT code: <input style={{width: `${editedLevel.ytcode.length || 6}ch`}} defaultValue={level.ytcode} onChange={(e:any) => {
+        <h1 style={{textAlign: "center"}} className="white">YT code: <textarea style={{width: `${Math.min(editedLevel.ytcode.length || 4, 25)}ch`}} defaultValue={level.ytcode} onChange={(e:any) => {
            setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.ytcode = e.target.value
@@ -630,10 +630,10 @@ export default function Settings() {
         }}/> {editedLevel.ytcode != level.ytcode ? "*" : ""}</h1> 
         <br></br>
         <div style={{display: "grid", placeItems: "center"}}>
-        <iframe width="560" height="315" src={`https://www.youtube-nocookie.com/embed/${editedLevel.ytcode}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+        <iframe style={{width: "min(90vw, 560px)", height: "calc(min(90vw, 560px) * (315 / 560))"}} src={`https://www.youtube-nocookie.com/embed/${editedLevel.ytcode}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
         </div>
         {level?._id != "yourmom" ? <><br></br>
-        <h1 style={{textAlign: "center"}} className="white">List:</h1>
+        <h1 style={{textAlign: "center"}} className="white">Add a record:</h1>
         <br></br>
         <div>
           <div style={{display: "grid", placeItems: "center"}}><Button id="record-add" onClick={async () => {
@@ -701,7 +701,7 @@ export default function Settings() {
                     let element = elements.item(parseInt(i))
                     if(element?.tagName == "SELECT") {
                       (element as any).value = "false"
-                    } else if(element?.tagName == "INPUT") {
+                    } else {
                       (element as any).value = ""
                     }
                   }
@@ -712,7 +712,7 @@ export default function Settings() {
            }
           }} disabled={!(objectEquals(level, editedLevel) && newRecord.name && newRecord.link && newRecord.percent[0] && newRecord.hertz)} style={{fontSize: "20px"}}>Add</Button></div>
           <br></br>
-            <h1 style={{textAlign: "center"}} className="white">Name: <input className="record-adding" style={{width: `${newRecord.name.length || 5}ch`}} placeholder="Name..." onChange={((e:any) => {
+            <h1 style={{textAlign: "center"}} className="white">Name: <textarea className="record-adding" style={{width: `${Math.min(newRecord.name.length || 5, 25)}ch`}} placeholder="Name..." onChange={((e:any) => {
              setTimeout(() => {
               let {value} = e.target
                         setNewRecord({
@@ -793,7 +793,7 @@ export default function Settings() {
         <option value="false">false</option>          
 </select></h1>
 <br></br>
-<h1 style={{textAlign: "center"}} className="white">Link: <input className="record-adding" style={{width: `${newRecord.link.length || 20}ch`}} onChange={(e:any) => {
+<h1 style={{textAlign: "center"}} className="white">Link: <textarea className="record-adding" style={{width: `${Math.min(newRecord.link.length || 25, 25)}ch`}} onChange={(e:any) => {
   setTimeout(() => {
     let {value} = e.target
               setNewRecord({
@@ -814,6 +814,8 @@ export default function Settings() {
         }}/></h1>
         <br></br><br></br><br></br>
           </div>
+          <h1 style={{textAlign: "center"}} className="white">List:</h1>
+          <br></br>
         {!level?.list.length || level.list[0].name == "" ? <h1 style={{textAlign: "center"}} className="white">No list records</h1> : level?.list?.map((e: any) => {
           let i = level.list.findIndex((x: any) => x._id == e._id)
          return <div key={e.link}>
@@ -874,7 +876,7 @@ export default function Settings() {
           }} disabled={!objectEquals(level, editedLevel)}>Delete</Button>
           </div>
           <br></br>
-            <h1 style={{textAlign: "center"}} className="white">Name: <input style={{width: `${editedLevel.list[i].name.length}ch`}} defaultValue={level.list[i].name} onChange={(e:any) => {
+            <h1 style={{textAlign: "center"}} className="white">Name: <textarea style={{width: `${Math.min(editedLevel.list[i].name.length || 5, 25)}ch`}} defaultValue={level.list[i].name} onChange={(e:any) => {
            setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.list[i].name = e.target.value
@@ -941,7 +943,7 @@ export default function Settings() {
         <option value="false">false</option>          
 </select> {editedLevel.list[i].verification != level.list[i].verification ? "*" : ""}</h1>
 <br></br>
-<h1 style={{textAlign: "center"}} className="white">Link: <input style={{width: `${editedLevel.list[i].link.length}ch`}} defaultValue={level.list[i].link} onChange={(e:any) => {
+<h1 style={{textAlign: "center"}} className="white">Link: <textarea style={{width: `${Math.min(editedLevel.list[i].link.length || 25, 25)}ch`}} defaultValue={level.list[i].link} onChange={(e:any) => {
            setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.list[i].link = e.target.value

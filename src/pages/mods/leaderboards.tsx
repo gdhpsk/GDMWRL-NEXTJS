@@ -339,7 +339,7 @@ export default function Settings({nationalities}: any) {
                     }}>Save</Button>
                 </div>
                 <br></br>
-                <h1 style={{textAlign: "center"}} className="white">Name: <input style={{width: `${editedProfile.name.length || 5}ch`}} defaultValue={profile.name} onChange={(e:any) => {
+                <h1 style={{textAlign: "center"}} className="white">Name: <textarea style={{width: `${Math.min(editedProfile.name.length || 5, 25)}ch`}} defaultValue={profile.name} onChange={(e:any) => {
                     setTimeout(() => {
                         let {value} = e.target
                     setEditedProfile({
@@ -347,7 +347,7 @@ export default function Settings({nationalities}: any) {
                         name: value
                     })
                     }, 0)
-                }}></input> {editedProfile.name != profile.name ? "*" : ""}</h1>
+                }}/> {editedProfile.name != profile.name ? "*" : ""}</h1>
                 <br></br>
                 <h1 style={{textAlign: "center"}} className="white">Nationality: <div style={{display: "grid", placeItems: "center", marginTop: "20px"}}><Form.Select style={{width: "fit-content"}} defaultValue={profile.nationality} onChange={(e:any) => {
                   setTimeout(() => {
@@ -372,7 +372,7 @@ export default function Settings({nationalities}: any) {
                 }}></input> {editedProfile.minus != profile.minus ? "*" : ""}</h1>
                 <br></br>
                 <h1 style={{textAlign: "center"}} className="white">Socials:</h1>
-                <h1 style={{textAlign: "center"}} className="white">Youtube: <input style={{width: `${editedProfile.socials?.[0]?.youtube?.length || 10}ch`}} defaultValue={profile?.socials?.[0]?.youtube} onChange={(e:any) => {
+                <h1 style={{textAlign: "center"}} className="white">Youtube: <textarea style={{width: `${Math.min(editedProfile.socials?.[0]?.youtube?.length || 10, 25)}ch`}} defaultValue={profile?.socials?.[0]?.youtube} onChange={(e:any) => {
                     setTimeout(() => {
                         let {value} = e.target
                     let socials = [{
@@ -386,8 +386,8 @@ export default function Settings({nationalities}: any) {
                         socials
                     })
                     }, 0)
-                }}></input> {editedProfile.socials?.[0]?.youtube != profile.socials?.[0]?.youtube ? "*" : ""}</h1>
-                <h1 style={{textAlign: "center"}} className="white">Twitter: <input style={{width: `${editedProfile.socials?.[0]?.twitter?.length || 10}ch`}} defaultValue={profile?.socials?.[0]?.twitter} onChange={(e:any) => {
+                }}/> {editedProfile.socials?.[0]?.youtube != profile.socials?.[0]?.youtube ? "*" : ""}</h1>
+                <h1 style={{textAlign: "center"}} className="white">Twitter: <textarea style={{width: `${Math.min(editedProfile.socials?.[0]?.twitter?.length || 10, 25)}ch`}} defaultValue={profile?.socials?.[0]?.twitter} onChange={(e:any) => {
                     setTimeout(() => {
                         let {value} = e.target
                     let socials = [{
@@ -401,8 +401,8 @@ export default function Settings({nationalities}: any) {
                         socials
                     })
                     }, 0)
-                }}></input> {editedProfile.socials?.[0]?.twitter != profile.socials?.[0]?.twitter ? "*" : ""}</h1>
-                <h1 style={{textAlign: "center"}} className="white">Twitch: <input style={{width: `${editedProfile.socials?.[0]?.twitch?.length || 10}ch`}} defaultValue={profile?.socials?.[0]?.twitch} onChange={(e:any) => {
+                }}/> {editedProfile.socials?.[0]?.twitter != profile.socials?.[0]?.twitter ? "*" : ""}</h1>
+                <h1 style={{textAlign: "center"}} className="white">Twitch: <textarea style={{width: `${editedProfile.socials?.[0]?.twitch?.length || 10}ch`}} defaultValue={profile?.socials?.[0]?.twitch} onChange={(e:any) => {
                    setTimeout(() => {
                     let {value} = e.target
                     let socials = [{
@@ -416,8 +416,8 @@ export default function Settings({nationalities}: any) {
                         socials
                     })
                    }, 0)
-                }}></input> {editedProfile.socials?.[0]?.twitch != profile.socials?.[0]?.twitch ? "*" : ""}</h1>
-                <h1 style={{textAlign: "center"}} className="white">Discord Tag: <input style={{width: `${editedProfile.socials?.[0]?.discord?.[0]?.length || 10}ch`}} defaultValue={profile?.socials?.[0]?.discord?.[0]} onChange={(e:any) => {
+                }}/> {editedProfile.socials?.[0]?.twitch != profile.socials?.[0]?.twitch ? "*" : ""}</h1>
+                <h1 style={{textAlign: "center"}} className="white">Discord Tag: <textarea style={{width: `${Math.min(editedProfile.socials?.[0]?.discord?.[0]?.length || 10, 25)}ch`}} defaultValue={profile?.socials?.[0]?.discord?.[0]} onChange={(e:any) => {
                     setTimeout(() => {
                         let {value} = e.target
                     let socials = [{
@@ -431,8 +431,8 @@ export default function Settings({nationalities}: any) {
                         socials
                     })
                     }, 0)
-                }}></input> {editedProfile.socials?.[0]?.discord?.[0] != profile.socials?.[0]?.discord?.[0] ? "*" : ""}</h1>
-                <h1 style={{textAlign: "center"}} className="white">Discord Server: <input style={{width: `${editedProfile.socials?.[0]?.discord?.[1]?.length || 10}ch`}} defaultValue={profile?.socials?.[0]?.discord?.[1]} onChange={(e:any) => {
+                }}/> {editedProfile.socials?.[0]?.discord?.[0] != profile.socials?.[0]?.discord?.[0] ? "*" : ""}</h1>
+                <h1 style={{textAlign: "center"}} className="white">Discord Server: <textarea style={{width: `${Math.min(editedProfile.socials?.[0]?.discord?.[1]?.length || 10, 25)}ch`}} defaultValue={profile?.socials?.[0]?.discord?.[1]} onChange={(e:any) => {
                     setTimeout(() => {
                         let {value} = e.target
                     let socials = [{
@@ -446,7 +446,7 @@ export default function Settings({nationalities}: any) {
                         socials
                     })
                     }, 0)
-                }}></input> {editedProfile.socials?.[0]?.discord?.[1] != profile.socials?.[0]?.discord?.[1] ? "*" : ""}</h1>
+                }}/> {editedProfile.socials?.[0]?.discord?.[1] != profile.socials?.[0]?.discord?.[1] ? "*" : ""}</h1>
             </div> : <h1 className="white" style={{textAlign: "center"}}>No content to display.</h1>}
       </div>
       </div>
