@@ -597,7 +597,7 @@ export default function Settings() {
           newLevel.position = parseInt(e.target.value)
           setEditedLevel(newLevel)
           }, 0)
-        }}/>{editedLevel.position != level.position ? " *" : ""}: <textarea rows={1} placeholder="Name..."  style={{width: `20ch`}} defaultValue={level.name} onChange={(e:any) => {
+        }}/>{editedLevel.position != level.position ? " *" : ""}: <textarea rows={2} placeholder="Name..."  style={{width: `20ch`}} defaultValue={level.name} onChange={(e:any) => {
           setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.name = e.target.value
@@ -605,7 +605,7 @@ export default function Settings() {
           }, 0)
         }}/> {editedLevel.name != level.name ? "*" : ""}</h1> 
         <br></br>
-        <h1 style={{textAlign: "center"}} className="white">Host: <textarea rows={1} style={{maxWidth: `20ch`}} defaultValue={level.host} onChange={(e:any) => {
+        <h1 style={{textAlign: "center"}} className="white">Host: <textarea rows={2} style={{maxWidth: `20ch`}} defaultValue={level.host} onChange={(e:any) => {
             setTimeout(() => {
               let newLevel = structuredClone(editedLevel)
             newLevel.host = e.target.value
@@ -613,7 +613,7 @@ export default function Settings() {
             }, 0)
         }}/> {editedLevel.host != level.host ? "*" : ""}</h1> 
         <br></br>
-        <h1 style={{textAlign: "center"}} className="white">Verifier: <textarea rows={1} style={{width: `20ch`}} defaultValue={level.verifier} onChange={(e:any) => {
+        <h1 style={{textAlign: "center"}} className="white">Verifier: <textarea rows={2} style={{width: `20ch`}} defaultValue={level.verifier} onChange={(e:any) => {
           setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.verifier = e.target.value
@@ -621,7 +621,7 @@ export default function Settings() {
           }, 0)
         }}/> {editedLevel.verifier != level.verifier ? "*" : ""}</h1> 
         <br></br>
-        <h1 style={{textAlign: "center"}} className="white">YT code: <textarea rows={1} style={{width: `20ch`}} defaultValue={level.ytcode} onChange={(e:any) => {
+        <h1 style={{textAlign: "center"}} className="white">YT code: <textarea rows={2} style={{width: `20ch`}} defaultValue={level.ytcode} onChange={(e:any) => {
            setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.ytcode = e.target.value
@@ -712,7 +712,7 @@ export default function Settings() {
            }
           }} disabled={!(objectEquals(level, editedLevel) && newRecord.name && newRecord.link && newRecord.percent[0] && newRecord.hertz)} style={{fontSize: "20px"}}>Add</Button></div>
           <br></br>
-            <h1 style={{textAlign: "center"}} className="white">Name: <textarea rows={1} className="record-adding" style={{width: `20ch`}} placeholder="Name..." onChange={((e:any) => {
+            <h1 style={{textAlign: "center"}} className="white">Name: <textarea rows={2} className="record-adding" style={{width: `20ch`}} placeholder="Name..." onChange={((e:any) => {
              setTimeout(() => {
               let {value} = e.target
                         setNewRecord({
@@ -793,7 +793,7 @@ export default function Settings() {
         <option value="false">false</option>          
 </select></h1>
 <br></br>
-<h1 style={{textAlign: "center"}} className="white">Link: <textarea rows={1} className="record-adding" style={{width: `20ch`}} onChange={(e:any) => {
+<h1 style={{textAlign: "center"}} className="white">Link: <textarea rows={2} className="record-adding" style={{width: `20ch`}} onChange={(e:any) => {
   setTimeout(() => {
     let {value} = e.target
               setNewRecord({
@@ -876,7 +876,7 @@ export default function Settings() {
           }} disabled={!objectEquals(level, editedLevel)}>Delete</Button>
           </div>
           <br></br>
-            <h1 style={{textAlign: "center"}} className="white">Name: <textarea rows={1} style={{width: `20ch`}} defaultValue={level.list[i].name} onChange={(e:any) => {
+            <h1 style={{textAlign: "center"}} className="white">Name: <textarea rows={2} style={{width: `20ch`}} defaultValue={level.list[i].name} onChange={(e:any) => {
            setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.list[i].name = e.target.value
@@ -943,7 +943,7 @@ export default function Settings() {
         <option value="false">false</option>          
 </select> {editedLevel.list[i].verification != level.list[i].verification ? "*" : ""}</h1>
 <br></br>
-<h1 style={{textAlign: "center"}} className="white">Link: <textarea rows={1} style={{width: `20ch`}} defaultValue={level.list[i].link} onChange={(e:any) => {
+<h1 style={{textAlign: "center"}} className="white">Link: <textarea rows={2} style={{width: `20ch`}} defaultValue={level.list[i].link} onChange={(e:any) => {
            setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.list[i].link = e.target.value
