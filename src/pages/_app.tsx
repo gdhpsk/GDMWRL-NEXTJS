@@ -13,8 +13,6 @@ const inter = Lato({ weight: ['400'], subsets: ['latin-ext'] })
 function App({ Component, pageProps, active }: AppProps | any) {
   return <>
   <Head>
-    {["/guidelines", "/main", "/extended", "/legacy", "/leaderboard"].includes(active) ? <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4543250064393866"
-     crossOrigin="anonymous"></Script> : ""}
   <title>Mobile World Records List</title>
   </Head>
   <main className={inter.className}>

@@ -1,7 +1,9 @@
 import { Html, Head, Main, NextScript } from 'next/document'
+import Script from 'next/script'
 
 
-export default function Document() {
+export default function Document(ctx: any) {
+  console.log(ctx.__NEXT_DATA__.props.active)
   return (
     <Html lang="en">
       <Head>
@@ -18,6 +20,8 @@ export default function Document() {
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
           crossOrigin="anonymous"
         />
+         {["/guidelines", "/main", "/extended", "/legacy", "/leaderboard"].includes(ctx?.__NEXT_DATA__?.props?.active) ? <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4543250064393866"
+     crossOrigin="anonymous"></script> : ""}
         </Head>
       <body>
         <Main />
