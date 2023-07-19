@@ -99,5 +99,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   export const config = {
-    runtime: "node"
+    runtime: "nodejs"
   }
