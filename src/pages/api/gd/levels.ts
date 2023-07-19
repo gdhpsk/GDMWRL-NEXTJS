@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
   })
   let text = await data.text()
-  console.log(text)
+  console.log(data.status)
   res.setHeader("Access-Control-Allow-Origin", "*")
     res.setHeader("Cache-Control", "no-cache")
   if(text=="-1") {
