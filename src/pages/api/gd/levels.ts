@@ -12,11 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
   })
   let text = await data.text()
-  console.log(data.status)
   res.setHeader("Access-Control-Allow-Origin", "*")
     res.setHeader("Cache-Control", "no-cache")
-  if(text=="-1") {
-    return res.status(404).send(text);
+  if(data.status != 200) {
+    return res.status(data.status).send(text);
   }
   let seperate = text.split("#")
   let levels = seperate[0].split("|")
@@ -97,4 +96,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
   }
      res.status(200).json(obj);
+  }
+
+  export const config = {
+    runtime: "node"
   }
