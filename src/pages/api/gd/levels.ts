@@ -2,10 +2,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     let data = await fetch("http://www.boomlings.com/database/getGJLevels21.php", {
     method: "post",
-    headers: { 
+    headers: new Headers({ 
       "User-Agent": "",
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-Forwarded-For": req.headers.forwarded,
+      "X-Real-Ip": req.headers.forwarded
+    } as any),
     body: new URLSearchParams({
         secret: "Wmfd2893gb7",
         ...req.query
