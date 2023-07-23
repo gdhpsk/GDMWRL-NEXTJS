@@ -460,7 +460,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
     })
-    replacements.other.map(async (stuff: [string, any, boolean]) => {
+    replacements.other.forEach(async (stuff: [string, any, boolean]) => {
+      if(replacements.names?.find((e:any) => e?.[2]?.id.toString() == stuff[1].id.toString())) return;
       await leaderboard.updateOne({ name: stuff[0] }, [{
         $set: {
           records: {
