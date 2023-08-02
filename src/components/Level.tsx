@@ -8,7 +8,7 @@ interface LevelProps {
     ytcode: string,
     verifier: string
     records: [Record<any, any>]
-    levelID: string
+    levelID?: string
 }
 
 const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifier, levelID }: LevelProps) => {
