@@ -8,9 +8,10 @@ interface LevelProps {
     ytcode: string,
     verifier: string
     records: [Record<any, any>]
+    levelID: string
 }
 
-const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifier }: LevelProps) => {
+const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifier, levelID }: LevelProps) => {
     function openWindow() {
         window.open(`https://youtube.com/watch?v=${ytcode}`, "_blank")
     }
@@ -23,6 +24,7 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
                 <p className="dude">{n > 150 ? "" : `${n}. `}{name}</p>&nbsp;
             <p style={{textAlign: "left", marginTop: "-10px", fontWeight: "bolder", fontSize: "min(22px, 2.5vw)"}}><span style={{"color": "gray"}}>Creators: {creator}</span></p>
             <p style={{textAlign: "left", marginTop: "0px", fontWeight: "bolder", fontSize: "min(22px, 2.5vw)"}}><span style={{"color": "gray"}}>Verifier: {verifier}</span></p>
+            {levelID ? <p style={{textAlign: "left", marginTop: "10px", fontWeight: "bolder", fontSize: "min(22px, 2.5vw)"}}><span style={{"color": "gray"}}>level ID: {levelID}</span></p> : ""}
             </div>
             <div className="thumb">
                     <img className="thumbnail" src={`https://i.ytimg.com/vi/${ytcode.split("&t=")[0]}/mqdefault.jpg`} style={{width: "var(--thumb-width)"}} width={260} height={156} onClick={openWindow} alt="Thumbnail" loading="lazy" />

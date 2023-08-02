@@ -497,11 +497,12 @@ export default function Settings() {
                   })
               }) 
             }
-                let changed = Object.entries(level).filter((e: any) => {
+            console.log(level)
+                let changed = Object.entries(editedLevel).filter((e: any) => {
                   if(e[0] == "list") {
-                    return !objectEquals(e[1], editedLevel[e[0]])
+                    return !objectEquals(e[1], level[e[0]])
                   } else {
-                    return e[1] != editedLevel[e[0]]
+                    return e[1] != level[e[0]]
                   }
                 })
                 await new Promise((resolve, reject) => {
@@ -517,7 +518,7 @@ export default function Settings() {
                         {info.move150below.name ? <p>Current #150 level below: {info.move150below.name}</p> : ""}
                         {changed.map((e: any) => {
                           if(e[0] != "list") {
-                            return <p key={e[0]}>{e[0]}: {e[1]} {"=>"} {editedLevel[e[0]]}</p>
+                            return <p key={e[0]}>{e[0]}: {typeof e[1] == "boolean" ? `${JSON.stringify(level[e[0]])} => ${JSON.stringify(e[1])}` : `${level[e[0]]} => ${e[1]}`}</p>
                           }
                           let changes: any = []
                           editedLevel[e[0]].forEach((x:any) => {
@@ -558,7 +559,7 @@ export default function Settings() {
                   },
                   body: JSON.stringify({
                     token: authToken,
-                    changes: Object.fromEntries(changed.map((e: any) => [e[0], editedLevel[e[0]]])),
+                    changes: Object.fromEntries(changed),
                     original: level,
                     new150: info.new150.id,
                     move150below: info.move150below.id
@@ -604,6 +605,26 @@ export default function Settings() {
           setEditedLevel(newLevel)
           }, 0)
         }}/> {editedLevel.name != level.name ? "*" : ""}</h1> 
+        <br></br>
+        <h1 style={{textAlign: "center"}} className="white">Mark as Unrated?: <select className="record-adding" defaultValue={level.unrated || "false"} onChange={(e) => {
+           setTimeout(() => {
+            let newLevel = structuredClone(editedLevel)
+          newLevel.unrated = JSON.parse(e.target.value)
+          console.log(newLevel)
+          setEditedLevel(newLevel)
+          }, 0)
+        }}>
+        <option value="true">true</option>          
+        <option value="false">false</option>          
+</select> {editedLevel.unrated != level.unrated ? "*" : ""}</h1>
+{editedLevel.unrated ? <><br></br>
+<h1 style={{textAlign: "center"}} className="white">Level ID: <input placeholder="level ID..."  type="number" style={{width: "10ch"}} defaultValue={level.levelID} onChange={(e:any) => {
+          setTimeout(() => {
+            let newLevel = structuredClone(editedLevel)
+          newLevel.levelID = e.target.value
+          setEditedLevel(newLevel)
+          }, 0)
+        }}/> {editedLevel.levelID != level.levelID ? "*" : ""}</h1></> : ""}
         <br></br>
         <h1 style={{textAlign: "center"}} className="white">Host: <textarea rows={2} style={{maxWidth: `20ch`}} defaultValue={level.host} onChange={(e:any) => {
             setTimeout(() => {

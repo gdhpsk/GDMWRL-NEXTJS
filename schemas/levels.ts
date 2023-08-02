@@ -32,6 +32,8 @@ var records = new mongoose.Schema<any>({
 
 var levelsSchema = new mongoose.Schema({
     position: Number,
+    unrated: Boolean,
+    levelID: String,
     name: {
         type: String,
         required: true

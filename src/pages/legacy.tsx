@@ -77,6 +77,7 @@ export default function Home({page_one}: {page_one: Record<any, any>}) {
           creator={e.host}
           records={e.list}
           verifier={e.verifier}
+          levelID={e.levelID}
         ></Level>
         <br></br>
         </div>
