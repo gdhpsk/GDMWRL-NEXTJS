@@ -27,13 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         list: {
             $switch: {
                 branches: [
-                    {case: {$gt: [{$size: {
-                        $filter: {
-                            input: "$list",
-                            as: "record",
-                            cond: {$ne: ["$$record.name", profile.name]}
-                        }
-                    }}, 1]}, then: {
+                    {case: {$gt: [{$size: "$list"}, 1]}, then: {
                         $filter: {
                             input: "$list",
                             as: "record",
