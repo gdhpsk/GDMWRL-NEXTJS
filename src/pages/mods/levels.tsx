@@ -2,9 +2,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { useEffect, useState } from "react"
 import ErrorPage from "../404"
 import styles from "../../styles/levels.module.css"
-import { Button, Form, FormSelect, InputGroup } from "react-bootstrap"
+import { Button, Form, FormSelect, Image, InputGroup } from "react-bootstrap"
 import withReactContent from "sweetalert2-react-content"
 import Swal from "sweetalert2"
+import { thumbnails } from "types"
 
 export default function Settings() {
     let [perms, setPerms] = useState<any>(null)
@@ -13,6 +14,7 @@ export default function Settings() {
     let [levels, setLevels] = useState<any>([])
     let [editedLevel, setEditedLevel] = useState<any>(null)
     let [goFetch, setGoFetch] = useState(true)
+    let [uniqueThumbnail, setUniqueThumbnail] = useState<any>("")
     let [newRecord, setNewRecord] = useState({
       name: "",
       percent: ["", ""],
@@ -78,6 +80,10 @@ export default function Settings() {
             setGoFetch(false)
         })()
     }, [goFetch])
+
+    useEffect(() => {
+      setUniqueThumbnail(editedLevel?.thumbnail?.type || "")
+    })
 
     function objectEquals(x: any, y: any) {
       'use strict';
@@ -309,7 +315,7 @@ export default function Settings() {
                     <h5>Please recheck all of your information:</h5>
                     <br></br>
                     {info.move150below.name ? <p>Current #150 level below: {info.move150below.name}</p> : ""}
-                    {Object.entries(editedLevel).map(e => e[0] == "_id" ? "" : <p key={e[0]}>{e[0]}: {e[1] as any}</p>)}
+                    {Object.entries(editedLevel).map(e => e[0] == "_id" ? "" : <p key={e[0]}>{e[0]}: {e[0] == "thumbnail" ? thumbnails.get(e[1]) : e[1] as any}</p>)}
                     <br></br>
                     <div>
                       <Button style={{float: "left"}} onClick={resolve}>Confirm</Button>
@@ -347,6 +353,7 @@ export default function Settings() {
                 id: ""
               }
             setTimeout(() => {
+              setUniqueThumbnail("")
               setGoFetch(true)
               changeLevel(json)
               setEditedLevel(json)
@@ -497,7 +504,6 @@ export default function Settings() {
                   })
               }) 
             }
-            console.log(level)
                 let changed = Object.entries(editedLevel).filter((e: any) => {
                   if(e[0] == "list") {
                     return !objectEquals(e[1], level[e[0]])
@@ -518,7 +524,7 @@ export default function Settings() {
                         {info.move150below.name ? <p>Current #150 level below: {info.move150below.name}</p> : ""}
                         {changed.map((e: any) => {
                           if(e[0] != "list") {
-                            return <p key={e[0]}>{e[0]}: {typeof e[1] == "boolean" ? `${JSON.stringify(level[e[0]])} => ${JSON.stringify(e[1])}` : `${level[e[0]]} => ${e[1]}`}</p>
+                            return <p key={e[0]}>{e[0]}: {typeof e[1] == "boolean" ? `${JSON.stringify(level[e[0]])} => ${JSON.stringify(e[1])}` : e[0] == "thumbnail" ? `${thumbnails.get(level[e[0]])} => ${thumbnails.get(e[1])}` : `${level[e[0]]} => ${e[1]}`}</p>
                           }
                           let changes: any = []
                           editedLevel[e[0]].forEach((x:any) => {
@@ -582,6 +588,7 @@ export default function Settings() {
                     id: ""
                   }
                 setTimeout(() => {
+                  setUniqueThumbnail("")
                   setGoFetch(true)
                   changeLevel(editedLevel)
                 }, 0)
@@ -610,7 +617,6 @@ export default function Settings() {
            setTimeout(() => {
             let newLevel = structuredClone(editedLevel)
           newLevel.unrated = JSON.parse(e.target.value)
-          console.log(newLevel)
           setEditedLevel(newLevel)
           }, 0)
         }}>
@@ -649,6 +655,45 @@ export default function Settings() {
           setEditedLevel(newLevel)
           }, 0)
         }}/> {editedLevel.ytcode != level.ytcode ? "*" : ""}</h1> 
+        <br></br>
+          <br></br>
+          <h1 style={{textAlign: "center"}} className="white">Thumbnail: <select className="record-adding" defaultValue={level.thumbnail?.type || ""} onChange={(e) => {
+            let {value} = e.target
+          setTimeout(() => {
+             let newLevel = structuredClone(editedLevel)
+             if(value) {
+             newLevel.thumbnail =  {
+              type: value,
+              value: newLevel.thumbnail?.value || level.thumbnail?.value || ""
+            }
+          } else {
+              if(!level.thumbnail) {
+                delete newLevel.thumbnail
+              } else {
+                newLevel.thumbnail = {}
+              }
+          }
+             setEditedLevel(newLevel)
+          }, 0)
+        }}>
+        <option value="youtube">YT code</option>          
+        <option value="custom">Custom</option>      
+        <option value="">No Custom Thumbnail</option>
+
+</select>{uniqueThumbnail ? <><br></br><textarea rows={2} style={{width: `20ch`}} defaultValue={level.thumbnail?.value || ""} onChange={(e:any) => {
+           setTimeout(() => {
+            let newLevel = structuredClone(editedLevel)
+            newLevel.thumbnail = {
+              type: uniqueThumbnail,
+              value: e.target.value
+            }
+          setEditedLevel(newLevel)
+          }, 0)
+        }}/></> : ""} {!objectEquals(editedLevel.thumbnail, level.thumbnail) ? "*" : ""}</h1> 
+        <br></br>
+        <div style={{display: "grid", placeItems: "center"}}>
+        <Image style={{width: "min(90vw, 560px)", height: "calc(min(90vw, 560px) * (315 / 560))"}} src={thumbnails.get(editedLevel.thumbnail) || `https://i.ytimg.com/vi/${editedLevel.ytcode}/mqdefault.jpg`} title="YouTube video player" />
+        </div>
         <br></br>
         <div style={{display: "grid", placeItems: "center"}}>
         <iframe style={{width: "min(90vw, 560px)", height: "calc(min(90vw, 560px) * (315 / 560))"}} src={`https://www.youtube-nocookie.com/embed/${editedLevel.ytcode}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>

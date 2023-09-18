@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Row, Col, Accordion, Button } from 'react-bootstrap'
+import { thumbnails } from 'types'
 
 interface LevelProps {
     n: number
@@ -7,11 +8,12 @@ interface LevelProps {
     creator: string,
     ytcode: string,
     verifier: string
+    thumbnail?: Record<any, any>
     records: [Record<any, any>]
     levelID?: string
 }
 
-const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifier, levelID }: LevelProps) => {
+const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, thumbnail, records, verifier, levelID }: LevelProps) => {
     function openWindow() {
         window.open(`https://youtube.com/watch?v=${ytcode}`, "_blank")
     }
@@ -27,7 +29,7 @@ const Level: React.FC<LevelProps> = ({ n, name, creator, ytcode, records, verifi
             {levelID ? <p style={{textAlign: "left", marginTop: "10px", fontWeight: "bolder", fontSize: "min(22px, 2.5vw)"}}><span style={{"color": "gray"}}>level ID: {levelID}</span></p> : ""}
             </div>
             <div className="thumb">
-                    <img className="thumbnail" src={`https://i.ytimg.com/vi/${ytcode.split("&t=")[0]}/mqdefault.jpg`} style={{width: "var(--thumb-width)"}} width={260} height={156} onClick={openWindow} alt="Thumbnail" loading="lazy" />
+                    <img className="thumbnail" src={thumbnails.get(thumbnail) || `https://i.ytimg.com/vi/${ytcode.split("&t=")[0]}/mqdefault.jpg`} style={{width: "var(--thumb-width)"}} width={260} height={156} onClick={openWindow} alt="Thumbnail" loading="lazy" />
                     <a className="play" href={`https://www.youtube.com/watch?v=${ytcode}`} target="_blank" rel={"noreferrer"}></a>
             </div>
             </div>

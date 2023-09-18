@@ -78,6 +78,7 @@ export default function Home({page_one}: {page_one: Record<any, any>}) {
           records={e.list}
           verifier={e.verifier}
           levelID={e.levelID}
+          thumbnail={e.thumbnail}
         ></Level>
         <br></br>
         </div>

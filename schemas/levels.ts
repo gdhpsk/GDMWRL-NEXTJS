@@ -34,6 +34,7 @@ var levelsSchema = new mongoose.Schema({
     position: Number,
     unrated: Boolean,
     levelID: String,
+    thumbnail: Object,
     name: {
         type: String,
         required: true

@@ -35,6 +35,7 @@ export default function Home({array}: {array: Array<Record<any, any>>}) {
           creator={e.host}
           records={e.list}
           verifier={e.verifier}
+          thumbnail={e.thumbnail}
         ></Level>
         <br></br>
         </div>
