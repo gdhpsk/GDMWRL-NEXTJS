@@ -129,7 +129,7 @@ Current Allowed Values: 30/40/60/90/120/144/165fps
 <br></br>
 <a href="https://sites.google.com/view/gd-mobile-lists/" target="_blank" rel="noreferrer">Mobile DemonList</a>
 <br></br>
-➢ Pointercrate Demonlist
+➢ Pointercrate Demonslist
 <br></br>
 <a href="https://pointercrate.com/" target="_blank" rel="noreferrer">Pointercrate</a>
 <br></br>
