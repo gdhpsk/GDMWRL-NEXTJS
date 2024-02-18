@@ -19,6 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ message: "You cannot perform this action." })
   }
   let level = req.body.original
+  let changes: any = []
+  
   if (req.body.changes.position) {
     if (req.body.changes.position < 1) return res.status(400).send({ message: "Input a valid placement number!" })
     let additional_info: Record<any, any> = {
@@ -409,7 +411,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     ])
   }
+
   if (req.body.changes.list) {
+
+    req.body.changes.list.forEach((x: any, ind: number) => {
+      Object.entries(x).forEach((i: any) => {
+        if (i[0] == "percent") {
+          Object.entries(i[1]).forEach((h: any) => {
+            if (h[1] != level.list[ind][i[0]][h[0]]) {
+              changes.push(`list.${ind}.${i[0]}.${h[0]}: ${level.list[ind][i[0]][h[0]]} => ${h[1]}`)
+            }
+          })
+          return
+        }
+        if (i[1] != level.list[ind][i[0]]) {
+          changes.push(`list.${ind}.${i[0]}: ${level.list[ind][i[0]]} => ${i[1]}`)
+        }
+      })
+    })
+
     let replacements = {
       names: level.list.map((e: any) => {
         let eq = req.body.changes.list.find((x: any) => x._id == e._id)
@@ -593,27 +613,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   await levels.findByIdAndUpdate(level._id, {
     "$set": req.body.changes
   })
-
-  let changes: any = []
-
-  if (req.body.changes.list) {
-    req.body.changes.list.forEach((x: any, ind: number) => {
-      Object.entries(x).forEach((i: any) => {
-        if (i[0] == "percent") {
-          Object.entries(i[1]).forEach((h: any) => {
-            if (h[1] != level.list[ind][i[0]][h[0]]) {
-              changes.push(`list.${ind}.${i[0]}.${h[0]}: ${level.list[ind][i[0]][h[0]]} => ${h[1]}`)
-            }
-            console.log(level.list[ind][i[0]][h[0]], h[1])
-          })
-          return
-        }
-        if (i[1] != level.list[ind][i[0]]) {
-          changes.push(`list.${ind}.${i[0]}: ${level.list[ind][i[0]]} => ${i[1]}`)
-        }
-      })
-    })
-  }
 
   await webhook(null, [{
     title: "Level Edited",
