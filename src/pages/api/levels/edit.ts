@@ -604,6 +604,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (h[1] != level.list[ind][i[0]][h[0]]) {
               changes.push(`list.${ind}.${i[0]}.${h[0]}: ${level.list[ind][i[0]][h[0]]} => ${h[1]}`)
             }
+            console.log(level.list[ind][i[0]][h[0]], h[1])
           })
           return
         }
@@ -613,8 +614,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
     })
   }
-
-  console.log(changes)
 
   await webhook(null, [{
     title: "Level Edited",
