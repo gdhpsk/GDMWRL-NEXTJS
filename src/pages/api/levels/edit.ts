@@ -614,6 +614,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
   }
 
+  console.log(changes)
+
   await webhook(null, [{
     title: "Level Edited",
     description: `[${level.name}](https://youtube.com/watch?v=${level.ytcode}) by ${level.host} (verifier: ${level.verifier}) has just been edited! Here is the info that was edited:\n\n${Object.entries(req.body.changes).map(e => e[0] == "thumbnail" ? `${e[0]}: ${thumbnails.get(level[e[0]])} => ${thumbnails.get(e[1])}` : e[0] != "list" ? `${e[0]}: ${level[e[0]]} => ${e[1]}` : changes.join("\n")).join("\n")}`
