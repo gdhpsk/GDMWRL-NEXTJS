@@ -597,8 +597,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let changes: any = []
 
   if (req.body.changes.list) {
-    req.body.changes.list.forEach((x: any) => {
-      let ind = req.body.changes.list.indexOf(x)
+    req.body.changes.list.forEach((x: any, ind: number) => {
       Object.entries(x).forEach((i: any) => {
         if (i[0] == "percent") {
           Object.entries(i[1]).forEach((h: any) => {
