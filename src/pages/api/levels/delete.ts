@@ -10,8 +10,10 @@ import { ObjectID } from "bson";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if(req.method != "DELETE") return res.status(403).json({message: "Incorrect method."})
   try {
+    if(req.body.token !== process.env.API_TOKEN) {
     let currentUser = await authentication.verifyIdToken(req.body.token as any)
     if(currentUser.role != "owner" && currentUser.role != "editor") throw new Error()
+    }
   } catch(_) {
     return res.status(401).json({message: "You cannot perform this action."})
   }
