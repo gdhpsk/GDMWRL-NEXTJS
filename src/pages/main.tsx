@@ -1,5 +1,3 @@
-
-
 import {useState, useEffect} from "react"
 import { Container, SSRProvider } from "react-bootstrap"
 import Level from"../components/Level"
